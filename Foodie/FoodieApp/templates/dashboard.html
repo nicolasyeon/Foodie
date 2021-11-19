@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <h1 class="display-1">Foodie</h1>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/dashboard">Home<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/view_account/{{request.session.user_id}}">Account</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <h1>Hello {{request.session.first_name}}, welcome to Foodie!</h1>
+
+        <div class="column">
+            <a href="/new_review/{{request.session.user_id}}"><button class="btn btn-primary" type="submit">Write a new
+                    restaurant
+                    review!</button></a>
+        </div>
+
+        <div class="column">
+            <table class="table table-striped table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Reviewer</th>
+                        <th scope="col">Restaurant Name</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Rating</th>
+                        <th scope="col">Content</th>
+                        <th scope="col">Likes</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Review in all_reviews %}
+                    {% if Review.creator.id is request.session.user_id %}
+                    <tr>
+                        <td>{{ Review.id }}</td>
+                        <td>{{ Review.creator.first_name }} {{ Review.creator.last_name }}</td>
+                        <td>{{ Review.restaurant_name }}</td>
+                        <td>{{ Review.location }}</td>
+                        <td>{{ Review.rating }}/10</td>
+                        <td>{{ Review.content }}</td>
+                        <td>{{ Review.liked_by.count }}</td>
+                        <td>
+                            {% if this_user not in liked_reviews %}
+                            <a href="/like/{{Review.id}}"><button class="btn btn-primary"
+                                    type="submit">Like</button></a>
+                            {% endif %}
+                            {% if this_user != Review.liked_by.all %}
+                            <a href="/unlike/{{Review.id}}"><button class="btn btn-primary"
+                                    type="submit">Unlike</button></a>
+                            {% endif %}
+                            | <a href="/view_review/{{Review.id}}">Edit</a> |
+                            <a href="/remove_review/{{Review.id}}">Delete</a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% for Review in all_reviews %}
+                    {% if Review.creator.id is not request.session.user_id %}
+                    <tr>
+                        <td>{{ Review.id }}</td>
+                        <td>{{ Review.creator.first_name }} {{ Review.creator.last_name }}</td>
+                        <td>{{ Review.restaurant_name }}</td>
+                        <td>{{ Review.location }}</td>
+                        <td>{{ Review.rating }}/10</td>
+                        <td>{{ Review.content }}</td>
+                        <td>{{ Review.liked_by.count }}</td>
+                        <td>
+                            {% if this_user not in liked_reviews %}
+                            <a href="/like/{{Review.id}}"><button class="btn btn-primary"
+                                    type="submit">Like</button></a>
+                            {% endif %}
+                            {% if this_user != Review.liked_by.all %}
+                            <a href="/unlike/{{Review.id}}"><button class="btn btn-primary"
+                                    type="submit">Unlike</button></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </nav>
+    </div>
+</body>
+
+</html>
