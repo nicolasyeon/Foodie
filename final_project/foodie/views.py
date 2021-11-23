@@ -9,7 +9,6 @@ import geocoder
 def index(request):
     return render(request, 'index.html')
 
-
 def register(request):
     errors = User.objects.basic_validator(request.POST)
     if len(errors) > 0:
@@ -143,40 +142,76 @@ def list_restaurants(request):
     url = 'https://api.yelp.com/v3/businesses/search'
     
     if request.method == "POST":
-        # restaurant_name = request.POST['restaurant_name']
-        # location = request.POST['location']
-        # element = request.POST['distance' or 'review_count']
-        # params = { 'term': restaurant_name, 'location': location, 'sort_by': element }
-
-        # restaurant_name = request.POST['restaurant_name']
-        # location = request.POST['location']
-        # distance = request.POST['distance']
-        # params = { 'term': restaurant_name, 'location': location, 'sort_by': distance }
-        
-        # restaurant_name = request.POST['restaurant_name']
-        # location = request.POST['location']
-        # review_count = request.POST['review_count']
-        # params = { 'term': restaurant_name, 'location': location, 'sort_by': review_count }
-
         restaurant_name = request.POST['restaurant_name']
         location = request.POST['location']
         review_count = request.POST.get('review_count')
         distance = request.POST.get('distance')
-        if distance == None:
+        price1 = request.POST.get('1')
+        price2 = request.POST.get('2')
+        price3 = request.POST.get('3')
+        price4 = request.POST.get('4')
+        open_now = request.POST.get('open_now')
+        params = { 'term': restaurant_name, 'location': location }
+        if review_count in request.POST:
             params = { 'term': restaurant_name, 'location': location, 'sort_by': review_count }
-        else:
+        if distance in request.POST:
             params = { 'term': restaurant_name, 'location': location, 'sort_by': distance }
+        if price1 in request.POST:
+            params = { 'term': restaurant_name, 'location': location, 'price': price1 }
+        if price2 in request.POST:
+            params = { 'term': restaurant_name, 'location': location, 'price': price2 }
+        if price3 in request.POST:
+            params = { 'term': restaurant_name, 'location': location, 'price': price3 }
+        if price4 in request.POST:
+            params = { 'term': restaurant_name, 'location': location, 'price': price4 }
+        if open_now in request.POST:
+            params = { 'term': restaurant_name, 'location': location, 'open_now': True }
         req = requests.get(url, params=params, headers=headers)
         parsed = json.loads(req.text)
-        print(params)
-        # print(parsed)
+        print(parsed)
 
         businesses = parsed["businesses"]
-        
+
         for business in businesses:
             business['display_address'] = " ".join(business["location"]["display_address"])
-            business['distance'] = distance
-            distance = round(distance)
+            meters = business['distance']
+            miles = meters * 0.000621371
+            miles = round(miles, 2)
+            print(miles)
+            business['distance'] = miles
+
+        context = {
+            'businesses': businesses,
+            'params': params,
+        }
+        return render(request, 'list_of_restaurants.html', context)
+    else:
+        return render(request, 'list_of_restaurants.html', {})
+
+def select_category(request):
+    api_key='aLUc-OJHBOGh-udAIY-aPFp-D2tSpgak6LezeQAr2pqYmg9YvHbHUoA-OkgT0tY5oagf-dxmbj7XpNZsEV-viFFgaP0TSvZEzWRJB4veY0_6-qpkRF1IEZxplvR0YXYx'
+    headers = {'Authorization': 'Bearer %s' % api_key}
+    url = 'https://api.yelp.com/v3/businesses/search'
+    
+    if request.method == "POST":
+        g = geocoder.ip('me')
+        current_location = g.address
+        restaurant_name = request.POST.get('restaurant_name')
+        hot_and_new = request.POST.get('hot_and_new')
+        params = { 'term': restaurant_name, 'location': current_location }
+        if hot_and_new in request.POST:
+            params = { 'location': current_location, 'attributes': hot_and_new }
+        req = requests.get(url, params=params, headers=headers)
+        parsed = json.loads(req.text)
+
+        businesses = parsed["businesses"]
+
+        for business in businesses:
+            business['display_address'] = " ".join(business["location"]["display_address"])
+            meters = business['distance']
+            miles = meters * 0.000621371
+            miles = round(miles, 2)
+            business['distance'] = miles
 
         context = {
             'businesses': businesses,

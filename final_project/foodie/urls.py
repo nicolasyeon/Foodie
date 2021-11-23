@@ -16,5 +16,6 @@ urlpatterns = [
     path('like/<int:review_id>', views.like),
     path('unlike/<int:review_id>', views.unlike),
     path('list_restaurants', views.list_restaurants),
+    path('select_category', views.select_category),
     path('current_location', views.current_location)
 ]

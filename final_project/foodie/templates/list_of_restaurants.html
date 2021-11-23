@@ -37,7 +37,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <nav class="navbar navbar-expand-lg navbar-light navigation">
-                        <a class="navbar-brand" href="/dashboard">
+                        <a class="navbar-brand" href="/">
                             <img src="{% static '../../../../static/images/Foodie-Logo-Primary.jpeg' %}" width=100px
                                 alt="Foodie logo">
                         </a>
@@ -49,7 +49,7 @@
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ml-auto main-nav ">
                                 <li class="nav-item active">
-                                    <a class="nav-link" href="/dashboard">Home</a>
+                                    <a class="nav-link" href="/">Home</a>
                                 </li>
                                 <li class="nav-item dropdown dropdown-slide">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown"
@@ -142,49 +142,70 @@
                                                 <div class="form-group col-md-4">
                                                     <input name="restaurant_name" type="text"
                                                         class="form-control my-2 my-lg-1" id="inputtext4"
-                                                        value="{{params.term}}">
+                                                        value="{{params.term}}" required>
                                                 </div>
                                                 {% if current_location %}
-                                                <div class="form-group col-md-3">
-                                                    <input name="location" type="text" class="form-control my-2 my-lg-1"
-                                                        id="inputLocation4" value="{{current_location}}">
-                                                </div>
-                                                {% else %}
-                                                <div class="form-group col-md-3">
-                                                    <input name="location" type="text" class="form-control my-2 my-lg-1"
-                                                        id="inputLocation4" value="{{params.location}}">
+                                                <div class="input-group mb-3">
+                                                    <div class="form-group col-md-3 input-group-prepend">
+                                                        <button style="border: none; background-color: none;"
+                                                            class="btn-sm" type="button"><i style="color: blue;"
+                                                                class="fa fa-solid fa-crosshairs fa-l"></i></button>
+                                                        <input name="location" type="text"
+                                                            class="form-control my-2 my-lg-1" id="inputLocation4"
+                                                            value="{{current_location}}" required>
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="form-group col-md-3 input-group-prepend">
+                                                        <button style="border: none; background-color: none;"
+                                                            class="btn-sm" type="button"><i style="color: blue;"
+                                                                class="fa fa-solid fa-crosshairs fa-l"></i></button>
+                                                        <input name="location" type="text"
+                                                            class="form-control my-2 my-lg-1" id="inputLocation4"
+                                                            value="{{params.location}}" required>
+                                                    </div>
                                                 </div>
                                                 {% endif %}
-                                                <div class="form-group col-md-2 align-content-center">
-                                                    <button type="submit" class="btn btn-primary">Search Now</button>
-                                                </div>
-                                                <div class="col-lg-12 col-md-12 align-content-center">
-                                                    <h4>Sort By:</h4>
-                                                    <div class="form-row justify-content-center">
-                                                        <div class="form-group col-sm-1">
-                                                            <button type="submit"
-                                                                class="w-100 form-control mt-lg-1 mt-md-2"
-                                                                name="distance" value="distance">Distance</button>
-                                                        </div>
-                                                        <div class="form-group col-sm-1">
-                                                            <select class="w-100 form-control mt-lg-1 mt-md-2">
-                                                                <option>Price</option>
-                                                                <option value="1">$</option>
-                                                                <option value="2">$$</option>
-                                                                <option value="3">$$$</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group col-sm-1">
-                                                            <button type="submit"
-                                                                class="w-100 form-control mt-lg-1 mt-md-2"
-                                                                name="review_count" value="review_count">Review
-                                                                Count</button>
-                                                        </div>
+                                            </div>
+                                            <div class="form-group col-md-2 align-content-center">
+                                                <button type="submit" class="btn btn-primary">Search Now</button>
+                                            </div>
+                                            <div class="col-lg-12 col-md-12 align-content-center">
+                                                <h4>Sort By:</h4>
+                                                <div class="form-row justify-content-center">
+                                                    <div class="form-group col-sm-1">
+                                                        <button type="submit" class="w-100 form-control mt-lg-1 mt-md-2"
+                                                            name="distance" value="distance">Distance</button>
+                                                    </div>
+                                                    <div class="form-group col-sm-1">
+                                                        <button type="submit" class="w-100 form-control mt-lg-1 mt-md-2"
+                                                            name="1" value="1">$</button>
+                                                    </div>
+                                                    <div class="form-group col-sm-1">
+                                                        <button type="submit" class="w-100 form-control mt-lg-1 mt-md-2"
+                                                            name="2" value="2">$$</button>
+                                                    </div>
+                                                    <div class="form-group col-sm-1">
+                                                        <button type="submit" class="w-100 form-control mt-lg-1 mt-md-2"
+                                                            name="3" value="3">$$$</button>
+                                                    </div>
+                                                    <div class="form-group col-sm-1">
+                                                        <button type="submit" class="w-100 form-control mt-lg-1 mt-md-2"
+                                                            name="4" value="4">$$$$</button>
+                                                    </div>
+                                                    <div class="form-group col-sm-1">
+                                                        <button type="submit" class="w-100 form-control mt-lg-1 mt-md-2"
+                                                            name="review_count" value="review_count">Review
+                                                            Count</button>
+                                                    </div>
+                                                    <div class="form-group col-sm-1">
+                                                        <button type="submit" class="w-100 form-control mt-lg-1 mt-md-2"
+                                                            name="open_now" value="open_now">Open
+                                                            Now</button>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </form>
                                     </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -192,79 +213,258 @@
                 </div>
             </div>
         </div>
+        </div>
     </section>
 
-    <section style="height:fit-content" class="popular-deals section bg-gray">
+    <section class="section-sm">
         <div class="container">
             <div class="row">
-                <div style="vertical-align:middle" class="col-md-12">
-                    <div class="section-title">
-                        <h2>You searched for {{params.term}} in {{params.location}}</h2>
+                <div class="col-md-12">
+                    <div class="search-result bg-gray">
+                        {% if params.attributes %}
+                        <h2>Hot and New restaurants near {{params.location}}</h2>
                         <p>Here are your results!</p>
+                        {% else %}
+                        <h2>Results for {{params.term}} in {{params.location}}</h2>
+                        <p>Here are your results!</p>
+                        {% endif %}
                     </div>
-                </div>
-            </div>
-    </section>
-    <section class="restaurant section bg-gray">
-        <div class="row">
-            <div style="text-align: center" class="trending-ads-slide col-md-auto">
-                {% for business in businesses %}
-                <div style="display:inline-block" class="col-lg-3">
-                    <div class="product-item bg-light">
-                        <div class="card">
-                            <div class="thumb-content">
-                                <a href="single.html">
-                                    <img height="200px" width="auto" class="card-img-top" src={{business.image_url}}
-                                        alt="Card image cap">
-                                </a>
-                            </div>
-                            <div class="card-body">
-                                <h4 class="card-title"><a href="single.html">{{ business.name }}</a></h4>
-                                <ul class="list-inline product-meta">
-                                    <li class="list-inline-item">
-                                        <a href="single.html">{{ business.display_address }}</a>
-                                    </li>
-                                    <li class="list-inline-item">
-                                        <a href="single.html">{{ business.phone }}</a>
-                                    </li>
-                                    <li class="list-inline-item">
-                                        <a href="single.html">{{ business.rating }}</a>
-                                    </li>
-                                    <li class="list-inline-item">
-                                        <a href="single.html">{{ business.price }}</a>
-                                    </li>
-                                    <li class="list-inline-item">
-                                        <a href="single.html">{{ business.review_count }} Reviews</a>
-                                    </li>
-                                    <li class="list-inline-item">
-                                        <a href="single.html">{{ business.distance }} meters away</a>
-                                    </li>
-                                </ul>
-                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing
-                                    elit.
-                                    Explicabo, aliquam!</p>
-                                <div class="product-ratings">
-                                    <ul class="list-inline">
-                                        <li class="list-inline-item selected"><i class="fa fa-star"></i>
-                                        </li>
-                                        <li class="list-inline-item selected"><i class="fa fa-star"></i>
-                                        </li>
-                                        <li class="list-inline-item selected"><i class="fa fa-star"></i>
-                                        </li>
-                                        <li class="list-inline-item selected"><i class="fa fa-star"></i>
-                                        </li>
-                                        <li class="list-inline-item"><i class="fa fa-star"></i></li>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="category-sidebar">
+                                <div class="widget category-list">
+                                    <h4 class="widget-header">Sort By:</h4>
+                                    <ul class="category-list">
+                                        <li><a href="/list_restaurants">Distance</a></li>
+                                        <li><a href="category.html">Iphone</a></li>
+                                        <li><a href="category.html">Microsoft</a></li>
+                                        <li><a href="category.html">Monitors</a></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-9">
+                            <div class="category-search-filter">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Short</strong>
+                                        <select>
+                                            <option>Most Recent</option>
+                                            <option value="1">Most Popular</option>
+                                            <option value="2">Lowest Price</option>
+                                            <option value="4">Highest Price</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="view">
+                                            <strong>Views</strong>
+                                            <ul class="list-inline view-switcher">
+                                                <li class="list-inline-item">
+                                                    <a href="#" onclick="event.preventDefault();" class="text-info"><i
+                                                            class="fa fa-th-large"></i></a>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <a href="ad-list-view.html"><i class="fa fa-reorder"></i></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-grid-list">
+                                <div class="row mt-30">
+                                    {% for business in businesses %}
+                                    <div class="col-sm-12 col-lg-4 col-md-6">
+                                        <!-- product card -->
+                                        <div class="product-item bg-light">
+                                            <div class="card">
+                                                <div class="thumb-content">
+                                                    <!-- <div class="price">$200</div> -->
+                                                    <a href="single.html">
+                                                        <img style="height: 300px; width: 300px;"
+                                                            class="card-img-top img-fluid" src={{business.image_url}}
+                                                            alt="Card image cap">
+                                                    </a>
+                                                </div>
+                                                <div style="align-items: center;" class="card-body">
+                                                    <h4 class="card-title"><a href="single.html">{{ business.name }}</a>
+                                                    </h4>
+                                                    <div class="product-ratings">
+                                                        <ul class="list-inline">
+                                                            <div>
+                                                                <a>{{ business.rating }}</a>
+                                                                {% if business.rating == 5 %}
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                {% endif %}
+                                                                {% if business.rating == 4.5 %}
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                {% endif %}
+                                                                {% if business.rating == 4.0 %}
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                {% endif %}
+                                                                {% if business.rating == 3.5 %}
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                {% endif %}
+                                                                {% if business.rating == 3.0 %}
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                {% endif %}
+                                                                {% if business.rating == 2.5 %}
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                {% endif %}
+                                                                {% if business.rating == 2.0 %}
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                {% endif %}
+                                                                {% if business.rating == 1.5 %}
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                {% endif %}
+                                                                {% if business.rating == 1.0 %}
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                {% endif %}
+                                                                {% if business.rating == 0.5 %}
+                                                                <li class="list-inline-item"><i style="color: gold;"
+                                                                        class="fa fa-star"></i>
+                                                                </li>
+                                                                {% endif %}
+                                                            </div>
+                                                        </ul>
+                                                    </div>
+                                                    <ul class="list-inline product-meta">
+                                                        <li class="list-inline-item">
+                                                            <p>{{ business.review_count }} reviews</p>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <p>{{ business.price }}</p>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <p>{{ business.distance }} miles</p>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <p>{{ business.display_address }}</p>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <p>{{ business.phone }}</p>
+                                                        </li>
+                                                        {% if business.open_now == true %}
+                                                        <li class="list-inline-item">
+                                                            <p style="color:green;" class="open">Open</p>
+                                                        </li>
+                                                        {% else %}
+                                                        <li class="list-inline-item">
+                                                            <p style="color:red;" class="closed">Closed</p>
+                                                        </li>
+                                                        {% endif %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="pagination justify-content-center">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination">
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                                <span class="sr-only">Previous</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                                <span class="sr-only">Next</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                {% endfor %}
-            </div>
-        </div>
     </section>
-
     <!--===================================
 =            Client Slider            =
 ====================================-->
