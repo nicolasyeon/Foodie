@@ -1,0 +1,223 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- SITE TITTLE -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create Collage Page</title>
+
+    <!-- FAVICON -->
+    <link href="{% static '../../../../static/images/fast-food-1851561-1569286.png' %}" rel="shortcut icon">
+    <!-- PLUGINS CSS STYLE -->
+    <!-- <link href="plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet"> -->
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{% static '../../../../static/plugins/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '../../../../static/plugins/bootstrap/css/bootstrap-slider.css' %}">
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/1cadc3650a.js" crossorigin="anonymous"></script>
+    <!-- Owl Carousel -->
+    <link href="plugins/slick-carousel/slick/slick.css" rel="stylesheet">
+    <link href="plugins/slick-carousel/slick/slick-theme.css" rel="stylesheet">
+    <!-- Fancy Box -->
+    <link href="{% static '../../../../static/plugins/fancybox/jquery.fancybox.pack.css' %}" rel="stylesheet">
+    <link href="{% static '../../../../static/plugins/jquery-nice-select/css/nice-select.css' %}" rel="stylesheet">
+    <!-- CUSTOM CSS -->
+    <link href="{% static '../../../../static/css/style.css' %}" rel="stylesheet">
+
+</head>
+
+<body class="body-wrapper">
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <nav class="navbar navbar-expand-lg navbar-light navigation">
+                        <a class="navbar-brand" href="/">
+                            <img src="{% static '../../../../static/images/Foodie-Logo-Primary.jpeg' %}" width=100px
+                                alt="Foodie logo">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto main-nav ">
+                                {% if request.session.user_id %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/dashboard">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/collage_page">Collage</a>
+                                </li>
+                                {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/explore">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/discover_collage_page">Collage</a>
+                                </li>
+                                {% endif %}
+                                <li class="nav-item dropdown dropdown-slide">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+                                        href="/view_account/{{request.session.user_id}}">Account<span><i
+                                                class="fa fa-angle-down"></i></span>
+                                    </a>
+                                    <!-- Dropdown list -->
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="dashboard.html">Edit Account</a>
+                                        <a class="dropdown-item" href="dashboard-my-ads.html">View Favorites</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown dropdown-slide">
+                                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        Pages <span><i class="fa fa-angle-down"></i></span>
+                                    </a>
+                                    <!-- Dropdown list -->
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="about-us.html">About Us</a>
+                                        <a class="dropdown-item" href="contact-us.html">Contact Us</a>
+                                        <a class="dropdown-item" href="user-profile.html">User Profile</a>
+                                        <a class="dropdown-item" href="404.html">404 Page</a>
+                                        <a class="dropdown-item" href="package.html">Package</a>
+                                        <a class="dropdown-item" href="single.html">Single Page</a>
+                                        <a class="dropdown-item" href="store.html">Store Single</a>
+                                        <a class="dropdown-item" href="single-blog.html">Single Post</a>
+                                        <a class="dropdown-item" href="blog.html">Blog</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown dropdown-slide">
+                                    <a class="nav-link dropdown-toggle" href="" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        Listing <span><i class="fa fa-angle-down"></i></span>
+                                    </a>
+                                    <!-- Dropdown list -->
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="category.html">Ad-Gird View</a>
+                                        <a class="dropdown-item" href="ad-listing-list.html">Ad-List View</a>
+                                    </div>
+                                </li>
+                            </ul>
+                            {% if request.session.user_id %}
+                            <ul class="navbar-nav ml-auto mt-10">
+                                <li class="nav-item">
+                                    <a class="nav-link login-button" href="/logout">Logout</a>
+                                </li>
+                            </ul>
+                            {% else %}
+                            <ul class="navbar-nav ml-auto mt-10">
+                                <li class="nav-item">
+                                    <a class="nav-link login-button" href="/login_page">Login</a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav ml-auto mt-10">
+                                <li class="nav-item">
+                                    <a class="nav-link login-button" href="/register_page">Register</a>
+                                </li>
+                            </ul>
+                            {% endif %}
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <hr>
+    <section class="hero-area bg-1 text-center overly">
+        <!-- Container Start -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Header Contetnt -->
+                    <div class="content-block">
+                        {% if request.session.user_id %}
+                        <h1>Hello {{request.session.first_name}}!</h1>
+                        {% endif %}
+                        <p>Make a collage of your favorite restaurants and let</p>
+                        <p>people explore your favorite cuisines and explore other users collages!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="login py-5 border-top-1">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-8 align-item-center">
+                    <div class="border">
+                        <h3 class="bg-gray p-4">Create Collage</h3>
+                        <form action="/create_collage/{{request.session.user_id}}" method="POST">
+                            {% csrf_token %}
+                            <fieldset class="p-4">
+                                <input type="text" name='name' placeholder="Name" class="border p-3 w-100 my-2"
+                                    required>
+                                <input type="text" name='description' placeholder="Description"
+                                    class="border p-3 w-100 my-2" required>
+                                <button type="submit"
+                                    class="d-block py-3 px-5 bg-primary text-white border-0 rounded font-weight-bold mt-3">Create</button>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer Bottom -->
+    <footer class="footer-bottom">
+        <!-- Container Start -->
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-12">
+                    <!-- Copyright -->
+                    <div class="copyright">
+                        <p>Copyright ©
+                            <script>
+                                var CurrentYear = new Date().getFullYear()
+                                document.write(CurrentYear)
+                            </script>. All Rights Reserved, theme by <a class="text-primary"
+                                href="https://themefisher.com" target="_blank">themefisher.com</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-12">
+                    <!-- Social Icons -->
+                    <ul class="social-media-icons text-right">
+                        <li><a class="fa fa-facebook" href="https://www.facebook.com/themefisher" target="_blank"></a>
+                        </li>
+                        <li><a class="fa fa-twitter" href="https://www.twitter.com/themefisher" target="_blank"></a>
+                        </li>
+                        <li><a class="fa fa-pinterest-p" href="https://www.pinterest.com/themefisher"
+                                target="_blank"></a></li>
+                        <li><a class="fa fa-vimeo" href=""></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Container End -->
+        <!-- To Top -->
+        <div class="top-to">
+            <a id="top" class="" href="#"><i class="fa fa-angle-up"></i></a>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPTS -->
+    <script src="{% static '../../../../static/plugins/jQuery/jquery.min.js' %}"></script>
+    <script src="{% static '../../../../static/plugins/bootstrap/js/popper.min.js' %}"></script>
+    <script src="{% static '../../../../static/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static '../../../../static/plugins/bootstrap/js/bootstrap-slider.js' %}"></script>
+    <!-- tether js -->
+    <script src="{% static '../../../../static/plugins/tether/js/tether.min.js' %}"></script>
+    <script src="{% static '../../../../static/plugins/raty/jquery.raty-fa.js' %}"></script>
+    <script src="{% static '../../../../static/plugins/slick-carousel/slick/slick.min.js' %}"></script>
+    <script src="{% static '../../../../static/plugins/jquery-nice-select/js/jquery.nice-select.min.js' %}"></script>
+    <script src="{% static '../../../../static/plugins/fancybox/jquery.fancybox.pack.js' %}"></script>
+    <script src="{% static '../../../../static/plugins/smoothscroll/SmoothScroll.min.js' %}"></script>
+
+</body>
+
+</html>

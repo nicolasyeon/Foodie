@@ -40,26 +40,11 @@ class User(models.Model):
 
     objects = UserManager()
 
-class ReviewManager(models.Manager):
-    def add_review_validator(self, postData):
-        errors = {}
-        if len(postData['restaurant_name']) < 3:
-            errors['restaurant_name'] = "A restaurant's name should be at least 3 characters!"
-        if len(postData['location']) < 1:
-            errors['location'] = "A location must be provided!"
-        if len(postData['content']) < 1:
-            errors['content'] = "Content must be provided!"
-        return errors
-
-class Review(models.Model):
-    restaurant_name = models.CharField(max_length=255)
-    location = models.CharField(max_length=255)
-    rating = models.IntegerField()
-    content = models.CharField(max_length=255)
+class Collage(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
     creator = models.ForeignKey(
         User, related_name="has_created_review", on_delete=models.CASCADE)
     liked_by = models.ManyToManyField(User, related_name="liked_reviews")
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
-
-    objects = ReviewManager()

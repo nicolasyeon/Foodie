@@ -1,20 +1,48 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import *
+from dotenv import load_dotenv
 import bcrypt
 import requests
 import json
 import geocoder
+import os
+
+load_dotenv()
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'landing.html')
+
+def register_page(request):
+    return render(request, 'register.html')
+
+def login_page(request):
+    return render(request, 'login.html')
+
+def collage_page(request):
+    return render(request, 'collage.html')
+
+def discover_collage_page(request):
+    return render(request, 'discover.html')
+
+def create_collage_page(request):
+    return render(request, 'create_collage.html')
+
+def create_collage(request, user_id):
+    user = User.objects.get(id=request.session['user_id'])
+    collage = Collage.objects.create(
+        name=request.POST['name'],
+        description=request.POST['description'],
+        creator=user
+    )
+    return redirect('/collage_page')
 
 def register(request):
     errors = User.objects.basic_validator(request.POST)
     if len(errors) > 0:
         for key, value in errors.items():
             messages.error(request, value)
-        return redirect('/')
+        return redirect('/register_page')
     else:
         user = User.objects.create(
             first_name=request.POST['fname'],
@@ -27,17 +55,17 @@ def register(request):
         request.session['first_name'] = user.first_name
         return redirect('/dashboard')
 
-
 def login(request):
     errors = User.objects.login_validator(request.POST)
     if len(errors):
         for key, value in errors.items():
             messages.error(request, value)
-        return redirect('/')
+        return redirect('/login_page')
     else:
         user = User.objects.get(email=request.POST['login_email'])
         request.session['user_id'] = user.id
         request.session['first_name'] = user.first_name
+        print(user)
         return redirect('/dashboard')
 
 def dashboard(request):
@@ -46,11 +74,15 @@ def dashboard(request):
         return redirect('/')
     else:
         context = {
-            'liked_reviews': Review.objects.filter(liked_by=this_user),
-            'all_reviews': Review.objects.all(),
+            # 'liked_reviews': Review.objects.filter(liked_by=this_user),
+            # 'all_reviews': Review.objects.all(),
             'this_user': this_user,
         }
         return render(request, 'index.html', context)
+
+# make a method where a user who has no account can explore
+def explore(request):
+    return render(request, 'index.html')
 
 def new_review(request, user_id):
     return render(request, 'create_review.html')
@@ -137,7 +169,7 @@ def unlike(request, review_id):
     return redirect('/dashboard')
 
 def list_restaurants(request):
-    api_key='aLUc-OJHBOGh-udAIY-aPFp-D2tSpgak6LezeQAr2pqYmg9YvHbHUoA-OkgT0tY5oagf-dxmbj7XpNZsEV-viFFgaP0TSvZEzWRJB4veY0_6-qpkRF1IEZxplvR0YXYx'
+    api_key = os.getenv("API_KEY")
     headers = {'Authorization': 'Bearer %s' % api_key}
     url = 'https://api.yelp.com/v3/businesses/search'
     
@@ -168,7 +200,6 @@ def list_restaurants(request):
             params = { 'term': restaurant_name, 'location': location, 'open_now': True }
         req = requests.get(url, params=params, headers=headers)
         parsed = json.loads(req.text)
-        print(parsed)
 
         businesses = parsed["businesses"]
 
@@ -177,7 +208,6 @@ def list_restaurants(request):
             meters = business['distance']
             miles = meters * 0.000621371
             miles = round(miles, 2)
-            print(miles)
             business['distance'] = miles
 
         context = {
@@ -189,7 +219,7 @@ def list_restaurants(request):
         return render(request, 'list_of_restaurants.html', {})
 
 def select_category(request):
-    api_key='aLUc-OJHBOGh-udAIY-aPFp-D2tSpgak6LezeQAr2pqYmg9YvHbHUoA-OkgT0tY5oagf-dxmbj7XpNZsEV-viFFgaP0TSvZEzWRJB4veY0_6-qpkRF1IEZxplvR0YXYx'
+    api_key = os.getenv("API_KEY")
     headers = {'Authorization': 'Bearer %s' % api_key}
     url = 'https://api.yelp.com/v3/businesses/search'
     

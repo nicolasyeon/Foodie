@@ -20,12 +20,6 @@
     <link rel="stylesheet" href="{% static '../../../../static/plugins/bootstrap/css/bootstrap-slider.css' %}">
     <!-- Font Awesome -->
     <link href="{% static '../../../../static/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
-    <!-- Owl Carousel -->
-    <link href="plugins/slick-carousel/slick/slick.css" rel="stylesheet">
-    <link href="plugins/slick-carousel/slick/slick-theme.css" rel="stylesheet">
-    <!-- Fancy Box -->
-    <link href="plugins/fancybox/jquery.fancybox.pack.css" rel="stylesheet">
-    <link href="plugins/jquery-nice-select/css/nice-select.css" rel="stylesheet">
     <!-- CUSTOM CSS -->
     <link href="{% static '../../../../static/css/style.css' %}" rel="stylesheet">
 
@@ -48,15 +42,26 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ml-auto main-nav ">
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="/">Home</a>
+                                {% if request.session.user_id %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/dashboard">Home</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/collage_page/{{request.session.user_id}}">Collage</a>
+                                </li>
+                                {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/explore">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/discover_collage_page">Collage</a>
+                                </li>
+                                {% endif %}
                                 <li class="nav-item dropdown dropdown-slide">
                                     <a class="nav-link dropdown-toggle" data-toggle="dropdown"
                                         href="/view_account/{{request.session.user_id}}">Account<span><i
                                                 class="fa fa-angle-down"></i></span>
                                     </a>
-
                                     <!-- Dropdown list -->
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="dashboard.html">Edit Account</a>
@@ -79,7 +84,6 @@
                                         <a class="dropdown-item" href="store.html">Store Single</a>
                                         <a class="dropdown-item" href="single-blog.html">Single Post</a>
                                         <a class="dropdown-item" href="blog.html">Blog</a>
-
                                     </div>
                                 </li>
                                 <li class="nav-item dropdown dropdown-slide">
@@ -94,11 +98,24 @@
                                     </div>
                                 </li>
                             </ul>
+                            {% if request.session.user_id %}
                             <ul class="navbar-nav ml-auto mt-10">
                                 <li class="nav-item">
-                                    <a class="nav-link login-button" href="login.html">Login</a>
+                                    <a class="nav-link login-button" href="/logout">Logout</a>
                                 </li>
                             </ul>
+                            {% else %}
+                            <ul class="navbar-nav ml-auto mt-10">
+                                <li class="nav-item">
+                                    <a class="nav-link login-button" href="/login_page">Login</a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav ml-auto mt-10">
+                                <li class="nav-item">
+                                    <a class="nav-link login-button" href="/register_page">Register</a>
+                                </li>
+                            </ul>
+                            {% endif %}
                         </div>
                     </nav>
                 </div>
@@ -117,6 +134,9 @@
                 <div class="col-md-12">
                     <!-- Header Contetnt -->
                     <div class="content-block">
+                        {% if request.session.user_id %}
+                        <h1>Hello {{request.session.first_name}}!</h1>
+                        {% endif %}
                         <h1>Find a restaurant near you</h1>
                         <p>Join the millions who are hungry just like you <br> everyday in local communities around
                             the world</p>
@@ -129,90 +149,54 @@
                             <div class="container">
                                 <div class="row justify-content-center">
                                     <div class="col-lg-12 col-md-12 align-content-center">
-                                        <form method="POST" action="/current_location">
+                                        <form id="restaurant_form" method="POST" action="/list_restaurants">
                                             {% csrf_token %}
-                                            <div class="form-group col-md-2 align-content-center">
-                                                <button type="submit" class="btn btn-info">Current
+                                        </form>
+                                        <form id="current_location_form" method="POST" action="/current_location">
+                                            {% csrf_token %}
+                                        </form>
+                                        {% csrf_token %}
+                                        <div class="form-row justify-content-center">
+                                            <div class="form-group col-md-3">
+                                                <input form="restaurant_form" name="restaurant_name" type="text"
+                                                    class="form-control my-2 my-lg-1" id="inputtext4"
+                                                    value="{{params.term}}" required>
+                                            </div>
+                                            {% if current_location %}
+                                            <div class="form-group col-md-2 align-self-center">
+                                                <button form="current_location_form" type="submit"
+                                                    class="btn btn-primary" id="inputLocation4">Current
                                                     Location</button>
                                             </div>
-                                        </form>
-                                        <form method="POST" action="/list_restaurants">
-                                            {% csrf_token %}
-                                            <div class="form-row justify-content-center">
-                                                <div class="form-group col-md-4">
-                                                    <input name="restaurant_name" type="text"
-                                                        class="form-control my-2 my-lg-1" id="inputtext4"
-                                                        value="{{params.term}}" required>
-                                                </div>
-                                                {% if current_location %}
-                                                <div class="input-group mb-3">
-                                                    <div class="form-group col-md-3 input-group-prepend">
-                                                        <button style="border: none; background-color: none;"
-                                                            class="btn-sm" type="button"><i style="color: blue;"
-                                                                class="fa fa-solid fa-crosshairs fa-l"></i></button>
-                                                        <input name="location" type="text"
-                                                            class="form-control my-2 my-lg-1" id="inputLocation4"
-                                                            value="{{current_location}}" required>
-                                                    </div>
-                                                    {% else %}
-                                                    <div class="form-group col-md-3 input-group-prepend">
-                                                        <button style="border: none; background-color: none;"
-                                                            class="btn-sm" type="button"><i style="color: blue;"
-                                                                class="fa fa-solid fa-crosshairs fa-l"></i></button>
-                                                        <input name="location" type="text"
-                                                            class="form-control my-2 my-lg-1" id="inputLocation4"
-                                                            value="{{params.location}}" required>
-                                                    </div>
-                                                </div>
-                                                {% endif %}
+                                            <div class="form-group col-md-3">
+                                                <input form="restaurant_form" name="location" type="text"
+                                                    class="form-control my-2 my-lg-1" id="inputLocation4"
+                                                    value="{{current_location}}" required>
                                             </div>
-                                            <div class="form-group col-md-2 align-content-center">
-                                                <button type="submit" class="btn btn-primary">Search Now</button>
+                                            {% else %}
+                                            <div class="form-group col-md-2 align-self-center">
+                                                <button form="current_location_form" type="submit"
+                                                    class="form-control my-2 my-lg-1" id="inputLocation4">Current
+                                                    Location</button>
                                             </div>
-                                            <div class="col-lg-12 col-md-12 align-content-center">
-                                                <h4>Sort By:</h4>
-                                                <div class="form-row justify-content-center">
-                                                    <div class="form-group col-sm-1">
-                                                        <button type="submit" class="w-100 form-control mt-lg-1 mt-md-2"
-                                                            name="distance" value="distance">Distance</button>
-                                                    </div>
-                                                    <div class="form-group col-sm-1">
-                                                        <button type="submit" class="w-100 form-control mt-lg-1 mt-md-2"
-                                                            name="1" value="1">$</button>
-                                                    </div>
-                                                    <div class="form-group col-sm-1">
-                                                        <button type="submit" class="w-100 form-control mt-lg-1 mt-md-2"
-                                                            name="2" value="2">$$</button>
-                                                    </div>
-                                                    <div class="form-group col-sm-1">
-                                                        <button type="submit" class="w-100 form-control mt-lg-1 mt-md-2"
-                                                            name="3" value="3">$$$</button>
-                                                    </div>
-                                                    <div class="form-group col-sm-1">
-                                                        <button type="submit" class="w-100 form-control mt-lg-1 mt-md-2"
-                                                            name="4" value="4">$$$$</button>
-                                                    </div>
-                                                    <div class="form-group col-sm-1">
-                                                        <button type="submit" class="w-100 form-control mt-lg-1 mt-md-2"
-                                                            name="review_count" value="review_count">Review
-                                                            Count</button>
-                                                    </div>
-                                                    <div class="form-group col-sm-1">
-                                                        <button type="submit" class="w-100 form-control mt-lg-1 mt-md-2"
-                                                            name="open_now" value="open_now">Open
-                                                            Now</button>
-                                                    </div>
-                                                </div>
+                                            <div class="form-group col-md-3">
+                                                <input form="restaurant_form" name="location" type="text"
+                                                    class="form-control my-2 my-lg-1" id="inputLocation4"
+                                                    value="{{params.location}}" required>
                                             </div>
+                                            {% endif %}
+                                            <div class="form-group col-md-2 align-self-center">
+                                                <button form="restaurant_form" type="submit"
+                                                    class="btn btn-primary">Search</button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </section>
 
@@ -235,15 +219,33 @@
                                 <div class="widget category-list">
                                     <h4 class="widget-header">Sort By:</h4>
                                     <ul class="category-list">
-                                        <li><a href="/list_restaurants">Distance</a></li>
-                                        <li><a href="category.html">Iphone</a></li>
-                                        <li><a href="category.html">Microsoft</a></li>
-                                        <li><a href="category.html">Monitors</a></li>
+                                        <li><button form="restaurant_form" type="submit"
+                                                class="w-100 form-control mt-lg-1 mt-md-2" name="distance"
+                                                value="distance">Distance</button></li>
+                                        <li><button form="restaurant_form" type="submit"
+                                                class="w-100 form-control mt-lg-1 mt-md-2" name="1" value="1">$</button>
+                                        </li>
+                                        <li><button form="restaurant_form" type="submit"
+                                                class="w-100 form-control mt-lg-1 mt-md-2" name="2"
+                                                value="2">$$</button></li>
+                                        <li><button form="restaurant_form" type="submit"
+                                                class="w-100 form-control mt-lg-1 mt-md-2" name="3"
+                                                value="3">$$$</button></li>
+                                        <li><button form="restaurant_form" type="submit"
+                                                class="w-100 form-control mt-lg-1 mt-md-2" name="4"
+                                                value="4">$$$$</button></li>
+                                        <li><button form="restaurant_form" type="submit"
+                                                class="w-100 form-control mt-lg-1 mt-md-2" name="review_count"
+                                                value="review_count">Review
+                                                Count</button></li>
+                                        <li><button form="restaurant_form" type="submit"
+                                                class="w-100 form-control mt-lg-1 mt-md-2" name="open_now"
+                                                value="open_now">Open
+                                                Now</button></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-
                         <div class="col-md-9">
                             <div class="category-search-filter">
                                 <div class="row">
@@ -515,9 +517,6 @@
     <!-- tether js -->
     <script src="{% static '../../../../static/plugins/tether/js/tether.min.js' %}"></script>
     <script src="{% static '../../../../static/plugins/raty/jquery.raty-fa.js' %}"></script>
-    <script src="{% static '../../../../static/plugins/slick-carousel/slick/slick.min.js' %}"></script>
-    <script src="{% static '../../../../static/plugins/jquery-nice-select/js/jquery.nice-select.min.js' %}"></script>
-    <script src="{% static '../../../../static/plugins/fancybox/jquery.fancybox.pack.js' %}"></script>
     <script src="{% static '../../../../static/plugins/smoothscroll/SmoothScroll.min.js' %}"></script>
 </body>
 
