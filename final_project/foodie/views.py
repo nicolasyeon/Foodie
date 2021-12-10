@@ -20,12 +20,19 @@ def login_page(request):
     return render(request, 'login.html')
 
 def collage_page(request):
-    return render(request, 'collage.html')
+    context = {
+            'all_collages': Collage.objects.all(),
+            'this_user': User.objects.get(id=request.session['user_id'])
+        }
+    return render(request, 'collage.html', context)
 
 def discover_collage_page(request):
-    return render(request, 'discover.html')
+    context = {
+            'all_collages': Collage.objects.all(),
+        }
+    return render(request, 'discover.html', context)
 
-def create_collage_page(request):
+def create_collage_page(request, user_id):
     return render(request, 'create_collage.html')
 
 def create_collage(request, user_id):
@@ -35,6 +42,55 @@ def create_collage(request, user_id):
         description=request.POST['description'],
         creator=user
     )
+    return redirect('/collage_page')
+
+def add_to_collage(request, business_id):
+    if request.method == "POST":
+        restaurants = Restaurants.objects.create(
+            restaurant_id=request.POST['restaurant_id'],
+        )
+        context = {
+            'restaurant' : restaurants,
+            'all_restaurants' : Restaurants.objects.all(),
+            'all_collages': Collage.objects.all(),
+            'this_user': User.objects.get(id=request.session['user_id'])
+        }
+        return render(request, 'collage.html', context)
+
+def add_restaurant(request, collage_id, restaurant_id):
+    collage = Collage.objects.get(id=collage_id)
+    restaurants = Restaurants.objects.get(id=restaurant_id)
+    restaurants.collages.add(collage)
+    return redirect('/collage_page')
+
+def collage_detail(request, collage_id):
+    api_key = os.getenv("API_KEY")
+    headers = {'Authorization': 'Bearer %s' % api_key}
+    collage = Collage.objects.get(id=collage_id)
+    businesses = []
+    for restaurant in collage.restaurants.all():
+        url = 'https://api.yelp.com/v3/businesses/{}'.format(restaurant.restaurant_id)
+        req = requests.get(url, headers=headers)
+        parsed = json.loads(req.text)
+        businesses.append(parsed)
+
+    context = {
+        'restaurant': restaurant,
+        'collage': Collage.objects.get(id=collage_id),
+        'businesses': businesses,
+        'all_restaurants' : Restaurants.objects.all(),
+        'all_collages': Collage.objects.all(),
+    }
+    return render(request, 'collage_detail.html', context)
+
+def remove_restaurant(request, collage_id, restaurant_id):
+    restaurant = Restaurants.objects.get(id=restaurant_id)
+    restaurant.delete()
+    return redirect(f'/collage_detail/{collage_id}')
+
+def remove_collage(request, collage_id):
+    collage = Collage.objects.get(id=collage_id)
+    collage.delete()
     return redirect('/collage_page')
 
 def register(request):
@@ -74,8 +130,6 @@ def dashboard(request):
         return redirect('/')
     else:
         context = {
-            # 'liked_reviews': Review.objects.filter(liked_by=this_user),
-            # 'all_reviews': Review.objects.all(),
             'this_user': this_user,
         }
         return render(request, 'index.html', context)
@@ -83,32 +137,6 @@ def dashboard(request):
 # make a method where a user who has no account can explore
 def explore(request):
     return render(request, 'index.html')
-
-def new_review(request, user_id):
-    return render(request, 'create_review.html')
-
-def create_review(request, user_id):
-    errors = Review.objects.add_review_validator(request.POST)
-    if len(errors) > 0:
-        for key, value in errors.items():
-            messages.error(request, value)
-        return redirect(f'/new_review/{user_id}')
-    else:
-        user = User.objects.get(id=request.session['user_id'])
-        review = Review.objects.create(
-            restaurant_name=request.POST['restaurant_name'],
-            location=request.POST['location'],
-            content=request.POST['content'],
-            rating=request.POST['rating'],
-            creator=user
-        )
-        return redirect('/dashboard')
-
-def remove_review(request, review_id):
-    review = Review.objects.get(id=review_id)
-    review.delete()
-
-    return redirect('/dashboard')
 
 def view_account(request, user_id):
     one_user = User.objects.get(id=user_id)
@@ -129,44 +157,6 @@ def edit_account(request, user_id):
         to_update.last_name = request.POST['lname']
         to_update.save()
     return redirect(f'/view_account/{user_id}')
-
-def view_review(request, review_id):
-    context = {
-        'review': Review.objects.get(id=review_id),
-        'this_user': User.objects.get(id=request.session['user_id'])
-    }
-    return render(request, 'view_review.html', context)
-
-def edit_review(request, review_id):
-    errors = Review.objects.add_review_validator(request.POST)
-    if len(errors) > 0:
-        for key, value in errors.items():
-            messages.error(request, value)
-        return redirect(f'/view_review/{review_id}')
-    else:
-        to_update = Review.objects.get(id=review_id)
-        to_update.restaurant_name = request.POST['restaurant_name']
-        to_update.location = request.POST['location']
-        to_update.rating = request.POST['rating']
-        to_update.content = request.POST['content']        
-        to_update.save()
-    return redirect('/dashboard')
-
-def like(request, review_id):
-    if request.method == "GET":
-        review = Review.objects.get(id=review_id)
-        user = User.objects.get(id=request.session['user_id'])
-        review.liked_by.add(user)
-        review.save()
-    return redirect('/dashboard')
-
-def unlike(request, review_id):
-    if request.method == "GET":
-        review = Review.objects.get(id=review_id)
-        user = User.objects.get(id=request.session['user_id'])
-        review.liked_by.remove(user)
-        review.save()
-    return redirect('/dashboard')
 
 def list_restaurants(request):
     api_key = os.getenv("API_KEY")
@@ -202,7 +192,7 @@ def list_restaurants(request):
         parsed = json.loads(req.text)
 
         businesses = parsed["businesses"]
-
+        print(businesses)
         for business in businesses:
             business['display_address'] = " ".join(business["location"]["display_address"])
             meters = business['distance']
@@ -251,7 +241,7 @@ def select_category(request):
     else:
         return render(request, 'list_of_restaurants.html', {})
 
-def current_location(request):
+def current_location_index(request):
     if request.method == "POST":
         g = geocoder.ip('me')
         current_location = g.address
@@ -259,6 +249,17 @@ def current_location(request):
             'current_location': current_location
         }
         return render(request, 'index.html', context)
+    else:
+        return render(request, 'list_of_restaurants.html', {})
+
+def current_location_list_of_restaurants(request):
+    if request.method == "POST":
+        g = geocoder.ip('me')
+        current_location = g.address
+        context = {
+            'current_location': current_location
+        }
+        return render(request, 'list_of_restaurants.html', context)
     else:
         return render(request, 'list_of_restaurants.html', {})
 

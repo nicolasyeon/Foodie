@@ -12,16 +12,16 @@
 
 
     <!-- FAVICON -->
-    <link href="{% static '../../../../static/images/fast-food-1851561-1569286.png' %}" rel="shortcut icon">
+    <link href="{% static '/images/fast-food-1851561-1569286.png' %}" rel="shortcut icon">
     <!-- PLUGINS CSS STYLE -->
     <!-- <link href="plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet"> -->
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="{% static '../../../../static/plugins/bootstrap/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static '../../../../static/plugins/bootstrap/css/bootstrap-slider.css' %}">
+    <link rel="stylesheet" href="{% static '/plugins/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '/plugins/bootstrap/css/bootstrap-slider.css' %}">
     <!-- Font Awesome -->
-    <link href="{% static '../../../../static/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static '/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
     <!-- CUSTOM CSS -->
-    <link href="{% static '../../../../static/css/style.css' %}" rel="stylesheet">
+    <link href="{% static '/css/style.css' %}" rel="stylesheet">
 
 </head>
 
@@ -32,8 +32,7 @@
                 <div class="col-md-12">
                     <nav class="navbar navbar-expand-lg navbar-light navigation">
                         <a class="navbar-brand" href="/">
-                            <img src="{% static '../../../../static/images/Foodie-Logo-Primary.jpeg' %}" width=100px
-                                alt="Foodie logo">
+                            <img src="{% static '/images/Foodie-Logo-Primary.jpeg' %}" width=100px alt="Foodie logo">
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -47,7 +46,7 @@
                                     <a class="nav-link" href="/dashboard">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/collage_page/{{request.session.user_id}}">Collage</a>
+                                    <a class="nav-link" href="/collage_page">Collage</a>
                                 </li>
                                 {% else %}
                                 <li class="nav-item">
@@ -152,7 +151,8 @@
                                         <form id="restaurant_form" method="POST" action="/list_restaurants">
                                             {% csrf_token %}
                                         </form>
-                                        <form id="current_location_form" method="POST" action="/current_location">
+                                        <form id="current_location_form" method="POST"
+                                            action="/current_location_list_of_restaurants">
                                             {% csrf_token %}
                                         </form>
                                         {% csrf_token %}
@@ -162,23 +162,18 @@
                                                     class="form-control my-2 my-lg-1" id="inputtext4"
                                                     value="{{params.term}}" required>
                                             </div>
-                                            {% if current_location %}
                                             <div class="form-group col-md-2 align-self-center">
                                                 <button form="current_location_form" type="submit"
-                                                    class="btn btn-primary" id="inputLocation4">Current
+                                                    class="form-control my-2 my-lg-1" id="inputLocation4">Current
                                                     Location</button>
                                             </div>
+                                            {% if current_location %}
                                             <div class="form-group col-md-3">
                                                 <input form="restaurant_form" name="location" type="text"
                                                     class="form-control my-2 my-lg-1" id="inputLocation4"
                                                     value="{{current_location}}" required>
                                             </div>
                                             {% else %}
-                                            <div class="form-group col-md-2 align-self-center">
-                                                <button form="current_location_form" type="submit"
-                                                    class="form-control my-2 my-lg-1" id="inputLocation4">Current
-                                                    Location</button>
-                                            </div>
                                             <div class="form-group col-md-3">
                                                 <input form="restaurant_form" name="location" type="text"
                                                     class="form-control my-2 my-lg-1" id="inputLocation4"
@@ -209,8 +204,12 @@
                         <h2>Hot and New restaurants near {{params.location}}</h2>
                         <p>Here are your results!</p>
                         {% else %}
+                        {% if params.term %}
                         <h2>Results for {{params.term}} in {{params.location}}</h2>
                         <p>Here are your results!</p>
+                        {% else %}
+                        <h2>No results here! Try again!</h2>
+                        {% endif %}
                         {% endif %}
                     </div>
                     <div class="row">
@@ -434,6 +433,16 @@
                                                             <p style="color:red;" class="closed">Closed</p>
                                                         </li>
                                                         {% endif %}
+                                                        {% if request.session.user_id %}
+                                                        <form method="POST" action="/add_to_collage/{{business.id}}">
+                                                            {% csrf_token %}
+                                                            <li class="list-inline-item">
+                                                                <button type="submit" name="restaurant_id"
+                                                                    class="w-100 form-control mt-lg-1 mt-md-2"
+                                                                    value="{{business.id}}">Add to Collage</button>
+                                                            </li>
+                                                        </form>
+                                                        {% endif %}
                                                     </ul>
                                                 </div>
                                             </div>
@@ -466,6 +475,8 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
     </section>
     <!--===================================
 =            Client Slider            =
@@ -510,14 +521,14 @@
     </footer>
 
     <!-- JAVASCRIPTS -->
-    <script src="{% static '../../../../static/plugins/jQuery/jquery.min.js' %}"></script>
-    <script src="{% static '../../../../static/plugins/bootstrap/js/popper.min.js' %}"></script>
-    <script src="{% static '../../../../static/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
-    <script src="{% static '../../../../static/plugins/bootstrap/js/bootstrap-slider.js' %}"></script>
+    <script src="{% static '/plugins/jQuery/jquery.min.js' %}"></script>
+    <script src="{% static '/plugins/bootstrap/js/popper.min.js' %}"></script>
+    <script src="{% static '/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static '/plugins/bootstrap/js/bootstrap-slider.js' %}"></script>
     <!-- tether js -->
-    <script src="{% static '../../../../static/plugins/tether/js/tether.min.js' %}"></script>
-    <script src="{% static '../../../../static/plugins/raty/jquery.raty-fa.js' %}"></script>
-    <script src="{% static '../../../../static/plugins/smoothscroll/SmoothScroll.min.js' %}"></script>
+    <script src="{% static '/plugins/tether/js/tether.min.js' %}"></script>
+    <script src="{% static '/plugins/raty/jquery.raty-fa.js' %}"></script>
+    <script src="{% static '/plugins/smoothscroll/SmoothScroll.min.js' %}"></script>
 </body>
 
 </html>

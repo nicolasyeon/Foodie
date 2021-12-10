@@ -12,19 +12,19 @@
 
 
 	<!-- FAVICON -->
-	<link href="{% static '../../../../static/images/fast-food-1851561-1569286.png' %}" rel="shortcut icon">
+	<link href="{% static '/images/fast-food-1851561-1569286.png' %}" rel="shortcut icon">
 	<!-- PLUGINS CSS STYLE -->
 	<!-- <link href="plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet"> -->
 	<!-- Bootstrap -->
-	<link rel="stylesheet" href="{% static '../../../../static/plugins/bootstrap/css/bootstrap.min.css' %}">
-	<link rel="stylesheet" href="{% static '../../../../static/plugins/bootstrap/css/bootstrap-slider.css' %}">
+	<link rel="stylesheet" href="{% static '/plugins/bootstrap/css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static '/plugins/bootstrap/css/bootstrap-slider.css' %}">
 	<!-- Font Awesome -->
 	<script src="https://kit.fontawesome.com/1cadc3650a.js" crossorigin="anonymous"></script>
 	<!-- Fancy Box -->
-	<link href="{% static '../../../../static/plugins/fancybox/jquery.fancybox.pack.css' %}" rel="stylesheet">
-	<link href="{% static '../../../../static/plugins/jquery-nice-select/css/nice-select.css' %}" rel="stylesheet">
+	<link href="{% static '/plugins/fancybox/jquery.fancybox.pack.css' %}" rel="stylesheet">
+	<link href="{% static '/plugins/jquery-nice-select/css/nice-select.css' %}" rel="stylesheet">
 	<!-- CUSTOM CSS -->
-	<link href="{% static '../../../../static/css/style.css' %}" rel="stylesheet">
+	<link href="{% static '/css/style.css' %}" rel="stylesheet">
 
 </head>
 
@@ -35,8 +35,7 @@
 				<div class="col-md-12">
 					<nav class="navbar navbar-expand-lg navbar-light navigation">
 						<a class="navbar-brand" href="/">
-							<img src="{% static '../../../../static/images/Foodie-Logo-Primary.jpeg' %}" width=100px
-								alt="Foodie logo">
+							<img src="{% static '/images/Foodie-Logo-Primary.jpeg' %}" width=100px alt="Foodie logo">
 						</a>
 						<button class="navbar-toggler" type="button" data-toggle="collapse"
 							data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -126,7 +125,7 @@
 										<form id="restaurant_form" method="POST" action="/list_restaurants">
 											{% csrf_token %}
 										</form>
-										<form id="current_location_form" method="POST" action="/current_location">
+										<form id="current_location_form" method="POST" action="/current_location_index">
 											{% csrf_token %}
 										</form>
 										{% csrf_token %}
@@ -174,7 +173,7 @@
 		</div>
 	</section>
 
-	<section class=" section">
+	<section class="section">
 		<!-- Container Start -->
 		<div class="container">
 			<div class="row">
@@ -191,7 +190,7 @@
 								{% csrf_token %}
 								<div class="category-block">
 									<div class="header">
-										<button name="hot_and_new" value="hot_and_new"
+										<button class="hot_and_new" name="hot_and_new" value="hot_and_new"
 											style="border: none; background: none;">
 											<i style="color: red;" class="fa fa-solid fa-fire fa-5x"></i>
 											<h4>Hot and New</h4>
@@ -305,8 +304,6 @@
 								</div>
 							</form>
 						</div> <!-- /Category List -->
-
-
 					</div>
 				</div>
 			</div>
@@ -356,17 +353,17 @@
 	</footer>
 
 	<!-- JAVASCRIPTS -->
-	<script src="{% static '../../../../static/plugins/jQuery/jquery.min.js' %}"></script>
-	<script src="{% static '../../../../static/plugins/bootstrap/js/popper.min.js' %}"></script>
-	<script src="{% static '../../../../static/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
-	<script src="{% static '../../../../static/plugins/bootstrap/js/bootstrap-slider.js' %}"></script>
+	<script src="{% static '/plugins/jQuery/jquery.min.js' %}"></script>
+	<script src="{% static '/plugins/bootstrap/js/popper.min.js' %}"></script>
+	<script src="{% static '/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+	<script src="{% static '/plugins/bootstrap/js/bootstrap-slider.js' %}"></script>
 	<!-- tether js -->
-	<script src="{% static '../../../../static/plugins/tether/js/tether.min.js' %}"></script>
-	<script src="{% static '../../../../static/plugins/raty/jquery.raty-fa.js' %}"></script>
-	<script src="{% static '../../../../static/plugins/slick-carousel/slick/slick.min.js' %}"></script>
-	<script src="{% static '../../../../static/plugins/jquery-nice-select/js/jquery.nice-select.min.js' %}"></script>
-	<script src="{% static '../../../../static/plugins/fancybox/jquery.fancybox.pack.js' %}"></script>
-	<script src="{% static '../../../../static/plugins/smoothscroll/SmoothScroll.min.js' %}"></script>
+	<script src="{% static '/plugins/tether/js/tether.min.js' %}"></script>
+	<script src="{% static '/plugins/raty/jquery.raty-fa.js' %}"></script>
+	<script src="{% static '/plugins/slick-carousel/slick/slick.min.js' %}"></script>
+	<script src="{% static '/plugins/jquery-nice-select/js/jquery.nice-select.min.js' %}"></script>
+	<script src="{% static '/plugins/fancybox/jquery.fancybox.pack.js' %}"></script>
+	<script src="{% static '/plugins/smoothscroll/SmoothScroll.min.js' %}"></script>
 
 </body>
 

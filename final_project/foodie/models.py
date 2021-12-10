@@ -44,7 +44,12 @@ class Collage(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     creator = models.ForeignKey(
-        User, related_name="has_created_review", on_delete=models.CASCADE)
-    liked_by = models.ManyToManyField(User, related_name="liked_reviews")
+        User, related_name="created_collage", on_delete=models.CASCADE)
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
+
+class Restaurants(models.Model):
+    restaurant_id = models.CharField(max_length=255)
+    collages = models.ManyToManyField(Collage, related_name="restaurants")
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
