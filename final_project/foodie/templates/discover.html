@@ -126,7 +126,6 @@
             </div>
         </div>
     </section>
-    <hr>
     <section class="hero-area bg-1 text-center overly">
         <!-- Container Start -->
         <div class="container">
@@ -146,39 +145,41 @@
     </section>
     <section class="section-sm">
         <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <!-- Section title -->
-                    <div class="section-title">
-                        <h2>Explore the collages made by other users!</h2>
-                        <p>Select the card to view the collage in detail!</p>
-                    </div>
-                    <div class="row">
-                        <!-- Category list -->
-                        <!-- <div class="col-lg-3 offset-lg-0 col-md-5 offset-md-1 col-sm-6 col-6"> -->
-                        {% for collage in all_collages %}
-                        <div class="category-block">
-                            <div class="header">
-                                <a href="/collage_detail/{{collage.id}}">
-                                    <h1>{{ collage.name }}</h1>
-                                </a>
-                            </div>
-                            <ul class="category-list">
-                                <p class="card-title">{{ collage.description}}</p>
-                                {% if collage.restaurants.all.count == 1 %}
-                                <p class="card-title">{{ collage.restaurants.all.count }} restaurant in this
-                                    collage!</p>
-                                {% else %}
-                                <p class="card-title">{{ collage.restaurants.all.count }} restaurants in
-                                    this
-                                    collage!</p>
-                                {% endif %}
-                                <p class="card-title">Created by: {{ collage.creator.first_name }}</p>
-                            </ul>
+            <!-- Section title -->
+            <div class="section-title">
+                <h2>Explore the collages made by other users!</h2>
+                <p>Select the card to view the collage in detail!</p>
+            </div>
+            <div class="row" style="justify-content: space-around;">
+                <!-- Category list -->
+                <!-- <div class="col-lg-3 offset-lg-0 col-md-5 offset-md-1 col-sm-6 col-6"> -->
+                {% for collage in all_collages %}
+                <div class="category-block">
+                    <div class="col">
+                        <div class="header">
+                            <a href="/collage_detail/{{collage.id}}">
+                                <h1>{{ collage.name }}</h1>
+                            </a>
                         </div>
-                        {% endfor %}
+                        <ul class="category-list">
+                            <p class="card-title">{{ collage.description}}</p>
+                            {% if collage.restaurants.all.count == 1 %}
+                            <p class="card-title">{{ collage.restaurants.all.count }} restaurant in this
+                                collage!</p>
+                            {% else %}
+                            <p class="card-title">{{ collage.restaurants.all.count }} restaurants in
+                                this
+                                collage!</p>
+                            {% endif %}
+                            <hr>
+                            <h4>Created By:</h4>
+                            {% for User in collage.creators.all %}
+                            <h4 class="card-title">{{ User.first_name }} {{ User.last_name }}</h4>
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
+                {% endfor %}
             </div>
         </div>
 

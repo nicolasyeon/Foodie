@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.core.paginator import Paginator
 from .models import *
 from dotenv import load_dotenv
 import bcrypt
@@ -40,9 +41,44 @@ def create_collage(request, user_id):
     collage = Collage.objects.create(
         name=request.POST['name'],
         description=request.POST['description'],
-        creator=user
     )
+    collage.creators.add(user)
     return redirect('/collage_page')
+
+def edit_collage(request,collage_id):
+    to_edit = Collage.objects.get(id=collage_id)
+    to_edit.name = request.POST['name']
+    to_edit.description = request.POST['description']
+    to_edit.save()
+    return redirect(f'/collage_detail/{collage_id}')
+
+def edit_collage_page(request, collage_id):
+    collage = Collage.objects.get(id=collage_id)
+    Restaurants = collage.restaurants.all()
+    creators = collage.creators.all()
+    if Restaurants in collage.restaurants.all() == 0:
+        return render(request, 'collage_detail.html', {})
+    else:
+        api_key = os.getenv("API_KEY")
+        headers = {'Authorization': 'Bearer %s' % api_key}
+        businesses = []
+        for Restaurants in collage.restaurants.all():
+            url = 'https://api.yelp.com/v3/businesses/{}'.format(Restaurants.restaurant_id)
+            req = requests.get(url, headers=headers)
+            parsed = json.loads(req.text)
+            businesses.append(parsed)
+        
+        context = {
+            'restaurant': Restaurants,
+            'creators': creators,
+            'collage': Collage.objects.get(id=collage_id),
+            'businesses': businesses,
+            'all_collages': Collage.objects.all(),
+            'this_user': User.objects.get(id=request.session['user_id']),
+            'all_users': User.objects.all()
+        }
+        return render(request, 'edit_collage.html', context)
+
 
 def add_to_collage(request, business_id):
     if request.method == "POST":
@@ -61,27 +97,33 @@ def add_restaurant(request, collage_id, restaurant_id):
     collage = Collage.objects.get(id=collage_id)
     restaurants = Restaurants.objects.get(id=restaurant_id)
     restaurants.collages.add(collage)
+    print(restaurants.collages)
     return redirect('/collage_page')
 
 def collage_detail(request, collage_id):
-    api_key = os.getenv("API_KEY")
-    headers = {'Authorization': 'Bearer %s' % api_key}
     collage = Collage.objects.get(id=collage_id)
-    businesses = []
-    for restaurant in collage.restaurants.all():
-        url = 'https://api.yelp.com/v3/businesses/{}'.format(restaurant.restaurant_id)
-        req = requests.get(url, headers=headers)
-        parsed = json.loads(req.text)
-        businesses.append(parsed)
+    Restaurants = collage.restaurants.all()
+    creators = collage.creators.all()
+    if Restaurants in collage.restaurants.all() == 0:
+        return render(request, 'collage_detail.html', {})
+    else:
+        api_key = os.getenv("API_KEY")
+        headers = {'Authorization': 'Bearer %s' % api_key}
+        businesses = []
+        for Restaurants in collage.restaurants.all():
+            url = 'https://api.yelp.com/v3/businesses/{}'.format(Restaurants.restaurant_id)
+            req = requests.get(url, headers=headers)
+            parsed = json.loads(req.text)
+            businesses.append(parsed)
 
-    context = {
-        'restaurant': restaurant,
-        'collage': Collage.objects.get(id=collage_id),
-        'businesses': businesses,
-        'all_restaurants' : Restaurants.objects.all(),
-        'all_collages': Collage.objects.all(),
-    }
-    return render(request, 'collage_detail.html', context)
+        context = {
+            'restaurant': Restaurants,
+            'creators': creators,
+            'collage': Collage.objects.get(id=collage_id),
+            'businesses': businesses,
+            'all_collages': Collage.objects.all(),
+        }
+        return render(request, 'collage_detail.html', context)
 
 def remove_restaurant(request, collage_id, restaurant_id):
     restaurant = Restaurants.objects.get(id=restaurant_id)
@@ -91,6 +133,42 @@ def remove_restaurant(request, collage_id, restaurant_id):
 def remove_collage(request, collage_id):
     collage = Collage.objects.get(id=collage_id)
     collage.delete()
+    return redirect('/collage_page')
+
+def add_user_page(request, collage_id):
+    collage = Collage.objects.get(id=collage_id)
+    Restaurants = collage.restaurants.all()
+    if Restaurants in collage.restaurants.all() == 0:
+        return render(request, 'collage_detail.html', {})
+    else:
+        api_key = os.getenv("API_KEY")
+        headers = {'Authorization': 'Bearer %s' % api_key}
+        businesses = []
+        for Restaurants in collage.restaurants.all():
+            url = 'https://api.yelp.com/v3/businesses/{}'.format(Restaurants.restaurant_id)
+            req = requests.get(url, headers=headers)
+            parsed = json.loads(req.text)
+            businesses.append(parsed)
+
+        context = {
+            'restaurant': Restaurants,
+            'collage': Collage.objects.get(id=collage_id),
+            'businesses': businesses,
+            'all_collages': Collage.objects.all(),
+            'all_users': User.objects.all()
+        }
+        return render(request, 'add_user.html', context)
+
+def add_user(request, collage_id, user_id):
+    collage = Collage.objects.get(id=collage_id)
+    user = User.objects.get(id=user_id)
+    collage.creators.add(user)
+    return redirect('/collage_page')
+
+def remove_user(request, collage_id, user_id):
+    collage = Collage.objects.get(id=collage_id)
+    user = User.objects.get(id=user_id)
+    collage.creators.remove(user)
     return redirect('/collage_page')
 
 def register(request):
@@ -192,13 +270,18 @@ def list_restaurants(request):
         parsed = json.loads(req.text)
 
         businesses = parsed["businesses"]
-        print(businesses)
         for business in businesses:
             business['display_address'] = " ".join(business["location"]["display_address"])
             meters = business['distance']
             miles = meters * 0.000621371
             miles = round(miles, 2)
             business['distance'] = miles
+
+        # restaurants = ".".join(businesses)
+        # print(restaurants)
+        # p = Paginator(restaurants, 12)
+        # page = request.GET.get('page')
+        # restaurants = p.get_page(page)
 
         context = {
             'businesses': businesses,

@@ -43,8 +43,9 @@ class User(models.Model):
 class Collage(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    creator = models.ForeignKey(
-        User, related_name="created_collage", on_delete=models.CASCADE)
+    # creator = models.ForeignKey(
+    #     User, related_name="created_collage", on_delete=models.CASCADE)
+    creators = models.ManyToManyField(User, related_name="creators")
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 
