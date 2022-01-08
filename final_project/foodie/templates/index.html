@@ -49,27 +49,16 @@
 									<a class="nav-link" href="/dashboard">Home</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" href="/collage_page">Collage</a>
+									<a class="nav-link" href="/collection_page">Collection</a>
 								</li>
 								{% else %}
 								<li class="nav-item">
 									<a class="nav-link" href="/explore">Home</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" href="/discover_collage_page">Collage</a>
+									<a class="nav-link" href="/discover_collection_page">Collection</a>
 								</li>
 								{% endif %}
-								<li class="nav-item dropdown dropdown-slide">
-									<a class="nav-link dropdown-toggle" data-toggle="dropdown"
-										href="/view_account/{{request.session.user_id}}">Account<span><i
-												class="fa fa-angle-down"></i></span>
-									</a>
-									<!-- Dropdown list -->
-									<div class="dropdown-menu">
-										<a class="dropdown-item" href="dashboard.html">Edit Account</a>
-										<a class="dropdown-item" href="dashboard-my-ads.html">View Favorites</a>
-									</div>
-								</li>
 							</ul>
 							{% if request.session.user_id %}
 							<ul class="navbar-nav ml-auto mt-10">
@@ -83,7 +72,7 @@
 									<a class="nav-link login-button" href="/login_page">Login</a>
 								</li>
 							</ul>
-							<ul class="navbar-nav ml-auto mt-10">
+							<ul class="navbar-nav mt-10">
 								<li class="nav-item">
 									<a class="nav-link login-button" href="/register_page">Register</a>
 								</li>
@@ -190,9 +179,8 @@
 								{% csrf_token %}
 								<div class="category-block">
 									<div class="header">
-										<button class="hot_and_new" name="hot_and_new" value="hot_and_new"
-											style="border: none; background: none;">
-											<i style="color: red;" class="fa fa-solid fa-fire fa-5x"></i>
+										<button class="category-button" name="hot_and_new" value="hot_and_new">
+											<i class="fa fa-solid fa-fire fa-5x fire"></i>
 											<h4>Hot and New</h4>
 										</button>
 									</div>
@@ -205,9 +193,8 @@
 								{% csrf_token %}
 								<div class="category-block">
 									<div class="header">
-										<button name="restaurant_name" value="Healthy"
-											style="border: none; background: none;">
-											<i style="color: orange;" class="fa fa-solid fa-carrot fa-5x"></i>
+										<button class="category-button" name="restaurant_name" value="Healthy">
+											<i class="carrot fa fa-solid fa-carrot fa-5x"></i>
 											<h4>Healthy</h4>
 										</button>
 									</div>
@@ -220,9 +207,8 @@
 								{% csrf_token %}
 								<div class="category-block">
 									<div class="header">
-										<button name="restaurant_name" value="Seafood"
-											style="border: none; background: none;">
-											<i style="color: blue;" class="fa fa-solid fa-fish fa-5x"></i>
+										<button class="category-button" name="restaurant_name" value="Seafood">
+											<i class="fish fa fa-solid fa-fish fa-5x"></i>
 											<h4>Seafood</h4>
 										</button>
 									</div>
@@ -235,9 +221,22 @@
 								{% csrf_token %}
 								<div class="category-block">
 									<div class="header">
-										<button name="restaurant_name" value="Dessert"
-											style="border: none; background: none;">
-											<i style="color: grey;" class="fa fa-solid fa-ice-cream fa-5x"></i>
+										<button class="category-button" name="restaurant_name" value="Bakery">
+											<i class="bread fa fa-solid fa-bread-slice fa-5x"></i>
+											<h4>Bakery</h4>
+										</button>
+									</div>
+								</div>
+							</form>
+						</div> <!-- /Category List -->
+						<!-- Category list -->
+						<div class="col-lg-3 offset-lg-0 col-md-5 offset-md-1 col-sm-6 col-6">
+							<form method="POST" action="/select_category">
+								{% csrf_token %}
+								<div class="category-block">
+									<div class="header">
+										<button class="category-button" name="restaurant_name" value="Dessert">
+											<i class="fa fa-solid fa-ice-cream fa-5x"></i>
 											<h4>Dessert</h4>
 										</button>
 									</div>
@@ -250,24 +249,8 @@
 								{% csrf_token %}
 								<div class="category-block">
 									<div class="header">
-										<button name="restaurant_name" value="Dessert"
-											style="border: none; background: none;">
-											<i style="color: grey;" class="fa fa-solid fa-ice-cream fa-5x"></i>
-											<h4>Dessert</h4>
-										</button>
-									</div>
-								</div>
-							</form>
-						</div> <!-- /Category List -->
-						<!-- Category list -->
-						<div class="col-lg-3 offset-lg-0 col-md-5 offset-md-1 col-sm-6 col-6">
-							<form method="POST" action="/select_category">
-								{% csrf_token %}
-								<div class="category-block">
-									<div class="header">
-										<button name="restaurant_name" value="Vegan"
-											style="border: none; background: none;">
-											<i style="color: darkgreen;" class="fa fa-solid fa-leaf fa-5x"></i>
+										<button class="category-button" name="restaurant_name" value="Vegan">
+											<i class="leaf fa fa-solid fa-leaf fa-5x"></i>
 											<h4>Vegan</h4>
 										</button>
 									</div>
@@ -280,9 +263,8 @@
 								{% csrf_token %}
 								<div class="category-block">
 									<div class="header">
-										<button name="restaurant_name" value="Bars"
-											style="border: none; background: none;">
-											<i style="color: black;" class="fa fa-solid fa-cocktail fa-5x"></i>
+										<button class="category-button" name="restaurant_name" value="Bars">
+											<i class="fa fa-solid fa-cocktail fa-5x"></i>
 											<h4>Bars</h4>
 										</button>
 									</div>
@@ -295,9 +277,8 @@
 								{% csrf_token %}
 								<div class="category-block">
 									<div class="header">
-										<button name="restaurant_name" value="Coffee"
-											style="border: none; background: none;">
-											<i style="color: brown;" class="fa fa-solid fa-coffee fa-5x"></i>
+										<button class="category-button" name="restaurant_name" value="Coffee">
+											<i class="coffee fa fa-solid fa-coffee fa-5x"></i>
 											<h4>Coffee/Cafe</h4>
 										</button>
 									</div>

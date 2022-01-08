@@ -20,49 +20,50 @@ def register_page(request):
 def login_page(request):
     return render(request, 'login.html')
 
-def collage_page(request):
+def collection_page(request):
     context = {
-            'all_collages': Collage.objects.all(),
+            'all_collections': Collection.objects.all(),
             'this_user': User.objects.get(id=request.session['user_id'])
         }
-    return render(request, 'collage.html', context)
+    return render(request, 'collection.html', context)
 
-def discover_collage_page(request):
+def discover_collection_page(request):
     context = {
-            'all_collages': Collage.objects.all(),
+            'all_collections': Collection.objects.all(),
         }
     return render(request, 'discover.html', context)
 
-def create_collage_page(request, user_id):
-    return render(request, 'create_collage.html')
+def create_collection_page(request, user_id):
+    return render(request, 'create_collection.html')
 
-def create_collage(request, user_id):
+def create_collection(request, user_id):
     user = User.objects.get(id=request.session['user_id'])
-    collage = Collage.objects.create(
+    collection = Collection.objects.create(
         name=request.POST['name'],
         description=request.POST['description'],
+        photo=None
     )
-    collage.creators.add(user)
-    return redirect('/collage_page')
+    collection.creators.add(user)
+    return redirect('/collection_page')
 
-def edit_collage(request,collage_id):
-    to_edit = Collage.objects.get(id=collage_id)
+def edit_collection(request,collection_id):
+    to_edit = Collection.objects.get(id=collection_id)
     to_edit.name = request.POST['name']
     to_edit.description = request.POST['description']
     to_edit.save()
-    return redirect(f'/collage_detail/{collage_id}')
+    return redirect(f'/collection_detail/{collection_id}')
 
-def edit_collage_page(request, collage_id):
-    collage = Collage.objects.get(id=collage_id)
-    Restaurants = collage.restaurants.all()
-    creators = collage.creators.all()
-    if Restaurants in collage.restaurants.all() == 0:
-        return render(request, 'collage_detail.html', {})
+def edit_collection_page(request, collection_id):
+    collection = Collection.objects.get(id=collection_id)
+    Restaurants = collection.restaurants.all()
+    creators = collection.creators.all()
+    if Restaurants in collection.restaurants.all() == 0:
+        return render(request, 'collection_detail.html', {})
     else:
         api_key = os.getenv("API_KEY")
         headers = {'Authorization': 'Bearer %s' % api_key}
         businesses = []
-        for Restaurants in collage.restaurants.all():
+        for Restaurants in collection.restaurants.all():
             url = 'https://api.yelp.com/v3/businesses/{}'.format(Restaurants.restaurant_id)
             req = requests.get(url, headers=headers)
             parsed = json.loads(req.text)
@@ -71,16 +72,16 @@ def edit_collage_page(request, collage_id):
         context = {
             'restaurant': Restaurants,
             'creators': creators,
-            'collage': Collage.objects.get(id=collage_id),
+            'collection': Collection.objects.get(id=collection_id),
             'businesses': businesses,
-            'all_collages': Collage.objects.all(),
+            'all_collections': Collection.objects.all(),
             'this_user': User.objects.get(id=request.session['user_id']),
             'all_users': User.objects.all()
         }
-        return render(request, 'edit_collage.html', context)
+        return render(request, 'edit_collection.html', context)
 
 
-def add_to_collage(request, business_id):
+def add_to_collection(request, business_id):
     if request.method == "POST":
         restaurants = Restaurants.objects.create(
             restaurant_id=request.POST['restaurant_id'],
@@ -88,88 +89,95 @@ def add_to_collage(request, business_id):
         context = {
             'restaurant' : restaurants,
             'all_restaurants' : Restaurants.objects.all(),
-            'all_collages': Collage.objects.all(),
+            'all_collections': Collection.objects.all(),
             'this_user': User.objects.get(id=request.session['user_id'])
         }
-        return render(request, 'collage.html', context)
+        return render(request, 'collection.html', context)
 
-def add_restaurant(request, collage_id, restaurant_id):
-    collage = Collage.objects.get(id=collage_id)
+def add_restaurant(request, collection_id, restaurant_id):
+    collection = Collection.objects.get(id=collection_id)
     restaurants = Restaurants.objects.get(id=restaurant_id)
-    restaurants.collages.add(collage)
-    print(restaurants.collages)
-    return redirect('/collage_page')
+    restaurants.collections.add(collection)
+    return redirect('/collection_page')
 
-def collage_detail(request, collage_id):
-    collage = Collage.objects.get(id=collage_id)
-    Restaurants = collage.restaurants.all()
-    creators = collage.creators.all()
-    if Restaurants in collage.restaurants.all() == 0:
-        return render(request, 'collage_detail.html', {})
+def add_photo(request, collection_id):
+    add_image = Collection.objects.get(id=collection_id)
+    add_image.photo=request.POST['image']
+    add_image.save()
+    return redirect('/collection_page')
+
+def collection_detail(request, collection_id):
+    collection = Collection.objects.get(id=collection_id)
+    Restaurants = collection.restaurants.all()
+    creators = collection.creators.all()
+    if Restaurants in collection.restaurants.all() == 0:
+        return render(request, 'collection_detail.html', {})
     else:
         api_key = os.getenv("API_KEY")
         headers = {'Authorization': 'Bearer %s' % api_key}
         businesses = []
-        for Restaurants in collage.restaurants.all():
+        for Restaurants in collection.restaurants.all():
             url = 'https://api.yelp.com/v3/businesses/{}'.format(Restaurants.restaurant_id)
             req = requests.get(url, headers=headers)
             parsed = json.loads(req.text)
             businesses.append(parsed)
-
+        
         context = {
             'restaurant': Restaurants,
             'creators': creators,
-            'collage': Collage.objects.get(id=collage_id),
+            'collection': Collection.objects.get(id=collection_id),
             'businesses': businesses,
-            'all_collages': Collage.objects.all(),
+            'all_collections': Collection.objects.all(),
+            'this_user': User.objects.get(id=request.session['user_id'])
         }
-        return render(request, 'collage_detail.html', context)
+        return render(request, 'collection_detail.html', context)
 
-def remove_restaurant(request, collage_id, restaurant_id):
-    restaurant = Restaurants.objects.get(id=restaurant_id)
-    restaurant.delete()
-    return redirect(f'/collage_detail/{collage_id}')
-
-def remove_collage(request, collage_id):
-    collage = Collage.objects.get(id=collage_id)
-    collage.delete()
-    return redirect('/collage_page')
-
-def add_user_page(request, collage_id):
-    collage = Collage.objects.get(id=collage_id)
-    Restaurants = collage.restaurants.all()
-    if Restaurants in collage.restaurants.all() == 0:
-        return render(request, 'collage_detail.html', {})
+def discover_collection_detail(request, collection_id):
+    collection = Collection.objects.get(id=collection_id)
+    Restaurants = collection.restaurants.all()
+    creators = collection.creators.all()
+    if Restaurants in collection.restaurants.all() == 0:
+        return render(request, 'collection_detail.html', {})
     else:
         api_key = os.getenv("API_KEY")
         headers = {'Authorization': 'Bearer %s' % api_key}
         businesses = []
-        for Restaurants in collage.restaurants.all():
+        for Restaurants in collection.restaurants.all():
             url = 'https://api.yelp.com/v3/businesses/{}'.format(Restaurants.restaurant_id)
             req = requests.get(url, headers=headers)
             parsed = json.loads(req.text)
             businesses.append(parsed)
-
+        
         context = {
             'restaurant': Restaurants,
-            'collage': Collage.objects.get(id=collage_id),
+            'creators': creators,
+            'collection': Collection.objects.get(id=collection_id),
             'businesses': businesses,
-            'all_collages': Collage.objects.all(),
-            'all_users': User.objects.all()
+            'all_collections': Collection.objects.all(),
         }
-        return render(request, 'add_user.html', context)
+        return render(request, 'collection_detail.html', context)
 
-def add_user(request, collage_id, user_id):
-    collage = Collage.objects.get(id=collage_id)
-    user = User.objects.get(id=user_id)
-    collage.creators.add(user)
-    return redirect('/collage_page')
+def remove_restaurant(request, collection_id, restaurant_id):
+    restaurant = Restaurants.objects.get(id=restaurant_id)
+    restaurant.delete()
+    return redirect(f'/collection_detail/{collection_id}')
 
-def remove_user(request, collage_id, user_id):
-    collage = Collage.objects.get(id=collage_id)
+def remove_collection(request, collection_id):
+    collection = Collection.objects.get(id=collection_id)
+    collection.delete()
+    return redirect('/collection_page')
+
+def add_user(request, collection_id, user_id):
+    collection = Collection.objects.get(id=collection_id)
     user = User.objects.get(id=user_id)
-    collage.creators.remove(user)
-    return redirect('/collage_page')
+    collection.creators.add(user)
+    return redirect('/collection_page')
+
+def remove_user(request, collection_id, user_id):
+    collection = Collection.objects.get(id=collection_id)
+    user = User.objects.get(id=user_id)
+    collection.creators.remove(user)
+    return redirect('/collection_page')
 
 def register(request):
     errors = User.objects.basic_validator(request.POST)
@@ -277,12 +285,6 @@ def list_restaurants(request):
             miles = round(miles, 2)
             business['distance'] = miles
 
-        # restaurants = ".".join(businesses)
-        # print(restaurants)
-        # p = Paginator(restaurants, 12)
-        # page = request.GET.get('page')
-        # restaurants = p.get_page(page)
-
         context = {
             'businesses': businesses,
             'params': params,
@@ -345,6 +347,18 @@ def current_location_list_of_restaurants(request):
         return render(request, 'list_of_restaurants.html', context)
     else:
         return render(request, 'list_of_restaurants.html', {})
+
+def like(request, collection_id):
+    user = User.objects.get(id=request.session['user_id'])
+    collection = Collection.objects.get(id=collection_id)
+    user.likes.add(collection)
+    return redirect ('/collection_page')
+
+def dislike(request, collection_id):
+    user = User.objects.get(id=request.session['user_id'])
+    collection = Collection.objects.get(id=collection_id)
+    user.likes.remove(collection)
+    return redirect ('/collection_page')
 
 def logout(request):
     del request.session['user_id']

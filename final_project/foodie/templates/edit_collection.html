@@ -46,56 +46,16 @@
                                     <a class="nav-link" href="/dashboard">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/collage_page">Collage</a>
+                                    <a class="nav-link" href="/collection_page">Collection</a>
                                 </li>
                                 {% else %}
                                 <li class="nav-item">
                                     <a class="nav-link" href="/explore">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/discover_collage_page">Collage</a>
+                                    <a class="nav-link" href="/discover_collection_page">Collection</a>
                                 </li>
                                 {% endif %}
-                                <li class="nav-item dropdown dropdown-slide">
-                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown"
-                                        href="/view_account/{{request.session.user_id}}">Account<span><i
-                                                class="fa fa-angle-down"></i></span>
-                                    </a>
-                                    <!-- Dropdown list -->
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="dashboard.html">Edit Account</a>
-                                        <a class="dropdown-item" href="dashboard-my-ads.html">View Favorites</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown dropdown-slide">
-                                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        Pages <span><i class="fa fa-angle-down"></i></span>
-                                    </a>
-                                    <!-- Dropdown list -->
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="about-us.html">About Us</a>
-                                        <a class="dropdown-item" href="contact-us.html">Contact Us</a>
-                                        <a class="dropdown-item" href="user-profile.html">User Profile</a>
-                                        <a class="dropdown-item" href="404.html">404 Page</a>
-                                        <a class="dropdown-item" href="package.html">Package</a>
-                                        <a class="dropdown-item" href="single.html">Single Page</a>
-                                        <a class="dropdown-item" href="store.html">Store Single</a>
-                                        <a class="dropdown-item" href="single-blog.html">Single Post</a>
-                                        <a class="dropdown-item" href="blog.html">Blog</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown dropdown-slide">
-                                    <a class="nav-link dropdown-toggle" href="" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        Listing <span><i class="fa fa-angle-down"></i></span>
-                                    </a>
-                                    <!-- Dropdown list -->
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="category.html">Ad-Gird View</a>
-                                        <a class="dropdown-item" href="ad-listing-list.html">Ad-List View</a>
-                                    </div>
-                                </li>
                             </ul>
                             {% if request.session.user_id %}
                             <ul class="navbar-nav ml-auto mt-10">
@@ -131,8 +91,8 @@
                         {% if request.session.user_id %}
                         <h1>Hello {{request.session.first_name}}!</h1>
                         {% endif %}
-                        <p>Make a collage of your favorite restaurants and let</p>
-                        <p>people explore your favorite cuisines and explore other users collages!</p>
+                        <p>Make a collection of your favorite restaurants and let</p>
+                        <p>people explore your favorite cuisines and explore other users collections!</p>
                     </div>
                 </div>
             </div>
@@ -143,10 +103,52 @@
             <div class="card">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-8">
-                            <p>Creators:</p>
+                        <div class="col-6">
+                            <p>Remove Creators:</p>
                             {% for User in creators %}
-                            <h2 class="card-title">{{ User.first_name }} {{ User.last_name }}</h2>
+                            <div class="edit-collection-card">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <form action="/remove_user/{{collection.id}}/{{User.id}}" method="POST">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn-danger">-</button>
+                                        </form>
+                                    </div>
+                                    <div class="col-10">
+                                        <div class="mt-2 text-center">
+                                            <h4 class="mb-0">{{ User.first_name}} {{ User.last_name }}</h4>
+                                            <span class="text-muted d-block">
+                                                <p>{{ User.email }}</p>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-6">
+                            <p>Add other Creators:</p>
+                            {% for user in all_users %}
+                            {% if user not in creators %}
+                            <div class="edit-collection-card">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <form action="/add_user/{{collection.id}}/{{user.id}}" method="POST">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn-success">+</button>
+                                        </form>
+                                    </div>
+                                    <div class="col-10">
+                                        <div class="mt-2 text-center">
+                                            <h4 class="mb-0">{{ user.first_name}} {{ user.last_name }}</h4>
+                                            <span class="text-muted d-block">
+                                                <p>{{ user.email }}</p>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
                             {% endfor %}
                         </div>
                     </div>
@@ -154,28 +156,41 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-8">
-                            <h1 class="card-title">{{ collage.name }}</h1>
-                            <p class="card-text">{{ collage.description }}</p>
+                            <form action="/edit_collection/{{collection.id}}" method="POST">
+                                {% csrf_token %}
+                                <h1><input type="text" name='name' placeholder="{{ collection.name }}"
+                                        class="card-title" required></h1>
+                                <p><input type="text" name='description' placeholder="{{ collection.description }}"
+                                        class="card-text" required></p>
+                                <button type="submit"
+                                    class="d-block py-3 px-5 bg-primary text-white border-0 rounded font-weight-bold mt-3">Edit</button>
+                            </form>
                         </div>
                         <div class="col-4">
                             {% if request.session.user_id %}
-                            <a href="/edit_collage_page/{{collage.id}}" class="btn btn-primary float-right">Edit
-                                Collage</a>
+                            <a href="/dashboard" class="btn btn-primary float-right">Add Restaurants</a>
                             {% endif %}
                         </div>
                     </div>
                     <hr>
                     <div class="product-grid-list">
-                        <div class="row mt-30">
+                        <div class="row">
                             {% for business in businesses %}
-                            <div class="col-sm-12 col-lg-4 col-md-6">
+                            <div class="col-lg-4">
                                 <!-- product card -->
                                 <div class="product-item bg-light">
-                                    <div class="card" style="height: 500px">
+                                    <div class="collection-card">
                                         <div class="thumb-content">
                                             <img class="card-img-top" src={{business.image_url}} alt="Card image cap">
+                                            <form method="POST" action="/add_photo/{{collection.id}}">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="image" value="{{business.image_url}}">
+                                                <button class="btn-primary btn-block" action="submit">Set
+                                                    as profile picture
+                                                </button>
+                                            </form>
                                         </div>
-                                        <div style="align-items: center;" class="card-body">
+                                        <div class="card-body">
                                             <div class="row">
                                                 <div class="col-10">
                                                     <h4 class="card-title">{{ business.name }}
@@ -185,113 +200,83 @@
                                                             <div>
                                                                 <a>{{ business.rating }}</a>
                                                                 {% if business.rating == 5 %}
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
                                                                 {% endif %}
                                                                 {% if business.rating == 4.5 %}
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
                                                                 {% endif %}
                                                                 {% if business.rating == 4.0 %}
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
                                                                 {% endif %}
                                                                 {% if business.rating == 3.5 %}
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
                                                                 {% endif %}
                                                                 {% if business.rating == 3.0 %}
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
                                                                 {% endif %}
                                                                 {% if business.rating == 2.5 %}
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
                                                                 {% endif %}
                                                                 {% if business.rating == 2.0 %}
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
                                                                 {% endif %}
                                                                 {% if business.rating == 1.5 %}
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
                                                                 {% endif %}
                                                                 {% if business.rating == 1.0 %}
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
                                                                 {% endif %}
                                                                 {% if business.rating == 0.5 %}
-                                                                <li class="list-inline-item"><i style="color: gold;"
-                                                                        class="fa fa-star"></i>
+                                                                <li class="list-inline-item"><i class="fa fa-star"></i>
                                                                 </li>
                                                                 {% endif %}
                                                             </div>
@@ -299,7 +284,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-2">
-                                                    <h4 class="float-right" style="color:green;">{{ business.price }}
+                                                    <h4 class="price float-right">{{ business.price }}
                                                     </h4>
                                                 </div>
                                             </div>
@@ -317,12 +302,20 @@
                                                 <br>
                                                 {% if business.open_now == true %}
                                                 <li class="list-inline-item">
-                                                    <p style="color:green;" class="open">Open</p>
+                                                    <p class="open">Open</p>
                                                 </li>
                                                 {% else %}
                                                 <li class="list-inline-item">
-                                                    <p style="color:red;" class="closed">Closed</p>
+                                                    <p class="closed">Closed</p>
                                                 </li>
+                                                {% endif %}
+                                                {% if request.session.user_id %}
+                                                <form method="POST"
+                                                    action="/remove_restaurant/{{collection.id}}/{{restaurant.id}}">
+                                                    {% csrf_token %}
+                                                    <button class="btn btn-danger btn-sm" action="submit">Remove
+                                                    </button>
+                                                </form>
                                                 {% endif %}
                                             </ul>
                                         </div>

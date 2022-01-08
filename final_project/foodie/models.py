@@ -40,17 +40,17 @@ class User(models.Model):
 
     objects = UserManager()
 
-class Collage(models.Model):
+class Collection(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    # creator = models.ForeignKey(
-    #     User, related_name="created_collage", on_delete=models.CASCADE)
+    photo = models.ImageField(upload_to="collections")
+    likes = models.ManyToManyField(User, related_name="likes")
     creators = models.ManyToManyField(User, related_name="creators")
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 
 class Restaurants(models.Model):
     restaurant_id = models.CharField(max_length=255)
-    collages = models.ManyToManyField(Collage, related_name="restaurants")
+    collections = models.ManyToManyField(Collection, related_name="restaurants")
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)

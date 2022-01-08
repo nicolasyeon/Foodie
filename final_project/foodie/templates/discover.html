@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Collage Page</title>
+    <title>Collection Page</title>
 
     <!-- FAVICON -->
     <link href="{% static '/images/fast-food-1851561-1569286.png' %}" rel="shortcut icon">
@@ -51,56 +51,16 @@
                                     <a class="nav-link" href="/dashboard">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/collage_page">Collage</a>
+                                    <a class="nav-link" href="/collection_page">Collection</a>
                                 </li>
                                 {% else %}
                                 <li class="nav-item">
                                     <a class="nav-link" href="/explore">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/discover_collage_page">Collage</a>
+                                    <a class="nav-link" href="/discover_collection_page">Collection</a>
                                 </li>
                                 {% endif %}
-                                <li class="nav-item dropdown dropdown-slide">
-                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown"
-                                        href="/view_account/{{request.session.user_id}}">Account<span><i
-                                                class="fa fa-angle-down"></i></span>
-                                    </a>
-                                    <!-- Dropdown list -->
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="dashboard.html">Edit Account</a>
-                                        <a class="dropdown-item" href="dashboard-my-ads.html">View Favorites</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown dropdown-slide">
-                                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        Pages <span><i class="fa fa-angle-down"></i></span>
-                                    </a>
-                                    <!-- Dropdown list -->
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="about-us.html">About Us</a>
-                                        <a class="dropdown-item" href="contact-us.html">Contact Us</a>
-                                        <a class="dropdown-item" href="user-profile.html">User Profile</a>
-                                        <a class="dropdown-item" href="404.html">404 Page</a>
-                                        <a class="dropdown-item" href="package.html">Package</a>
-                                        <a class="dropdown-item" href="single.html">Single Page</a>
-                                        <a class="dropdown-item" href="store.html">Store Single</a>
-                                        <a class="dropdown-item" href="single-blog.html">Single Post</a>
-                                        <a class="dropdown-item" href="blog.html">Blog</a>
-                                    </div>
-                                </li>
-                                <li class="nav-item dropdown dropdown-slide">
-                                    <a class="nav-link dropdown-toggle" href="" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        Listing <span><i class="fa fa-angle-down"></i></span>
-                                    </a>
-                                    <!-- Dropdown list -->
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="category.html">Ad-Gird View</a>
-                                        <a class="dropdown-item" href="ad-listing-list.html">Ad-List View</a>
-                                    </div>
-                                </li>
                             </ul>
                             {% if request.session.user_id %}
                             <ul class="navbar-nav ml-auto mt-10">
@@ -114,7 +74,7 @@
                                     <a class="nav-link login-button" href="/login_page">Login</a>
                                 </li>
                             </ul>
-                            <ul class="navbar-nav ml-auto mt-10">
+                            <ul class="navbar-nav mt-10">
                                 <li class="nav-item">
                                     <a class="nav-link login-button" href="/register_page">Register</a>
                                 </li>
@@ -133,10 +93,8 @@
                 <div class="col-md-12">
                     <!-- Header Contetnt -->
                     <div class="content-block">
-                        {% if request.session.user_id %}
-                        <h1>Hello {{request.session.first_name}}!</h1>
-                        {% endif %}
-                        <p>Welcome to the discover page! Explore different collages</p>
+                        <h1>Hello foodie!</h1>
+                        <p>Welcome to the discover page! Explore different collections</p>
                         <p>that may inspire you from users with diverse foodie backgrounds</p>
                     </div>
                 </div>
@@ -147,63 +105,50 @@
         <div class="container">
             <!-- Section title -->
             <div class="section-title">
-                <h2>Explore the collages made by other users!</h2>
-                <p>Select the card to view the collage in detail!</p>
+                <h2>Explore the collections made by other users!</h2>
+                <p>Select the card to view the collection in detail!</p>
             </div>
-            <div class="row" style="justify-content: space-around;">
-                <!-- Category list -->
-                <!-- <div class="col-lg-3 offset-lg-0 col-md-5 offset-md-1 col-sm-6 col-6"> -->
-                {% for collage in all_collages %}
-                <div class="category-block">
-                    <div class="col">
-                        <div class="header">
-                            <a href="/collage_detail/{{collage.id}}">
-                                <h1>{{ collage.name }}</h1>
-                            </a>
-                        </div>
-                        <ul class="category-list">
-                            <p class="card-title">{{ collage.description}}</p>
-                            {% if collage.restaurants.all.count == 1 %}
-                            <p class="card-title">{{ collage.restaurants.all.count }} restaurant in this
-                                collage!</p>
-                            {% else %}
-                            <p class="card-title">{{ collage.restaurants.all.count }} restaurants in
-                                this
-                                collage!</p>
+            <div class="row discover-collection">
+                {% for collection in all_collections %}
+                <div class="col-sm-12 col-lg-4 col-md-6">
+                    <!-- product card -->
+                    <div class="product-item bg-light mt-10">
+                        <div class="bg-light">
+                            {% if collection.photo %}
+                            <img class="discover-collection-photo" src={{ collection.photo }} alt="Card image cap">
                             {% endif %}
-                            <hr>
-                            <h4>Created By:</h4>
-                            {% for User in collage.creators.all %}
-                            <h4 class="card-title">{{ User.first_name }} {{ User.last_name }}</h4>
-                            {% endfor %}
-                        </ul>
+                            <div class="card-body">
+                                <div class="product-ratings">
+                                    <a href="/discover_collection_detail/{{collection.id}}">
+                                        <h1>{{ collection.name }}</h1>
+                                    </a>
+                                    <h4>{{ collection.description }}</h4>
+                                    <hr>
+                                    <p>Creators:</p>
+                                    {% for User in collection.creators.all %}
+                                    <p>{{ User.first_name }} {{ User.last_name }}
+                                    </p>
+                                    {% endfor %}
+                                    {% if collection.restaurants.all.count == 1 %}
+                                    <p>{{ collection.restaurants.all.count }}
+                                        restaurant in
+                                        this
+                                        collection!</p>
+                                    {% else %}
+                                    <hr>
+                                    <p>{{ collection.restaurants.all.count }}
+                                        restaurants in
+                                        this
+                                        collection!</p>
+                                    {% endif %}
+                                    <p>Likes: {{ collection.likes.all.count }}</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
-        </div>
-
-
-        <div class="pagination justify-content-center">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
         </div>
     </section>
 

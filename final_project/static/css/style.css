@@ -328,6 +328,16 @@ button {
   padding: 70px 0;
 }
 
+.discover-collection {
+  justify-content: space-around;
+}
+
+.section-title {
+  position: relative;
+  margin-bottom: 75px;
+  text-align: center;
+}
+
 .section-title {
   position: relative;
   margin-bottom: 75px;
@@ -524,6 +534,11 @@ button {
  * Card Styles
  *
  */
+
+.profile{
+  width: 80px;
+}
+
 .card-main {
   border-radius: 2px;
   border: none;
@@ -1272,13 +1287,13 @@ ul.pagination .active a {
   margin-top: 30px;
 }
 
-.collage-block {
+.collection-block {
   box-shadow: 0px 7px 16px 0px rgba(0, 0, 0, 0.09);
   padding: 20px 25px;
   border-radius: 3px;
-  margin-bottom: 25px;
   width: 250px;
   height: 300px;
+  display: inline-block;
 }
 
 .category-block {
@@ -1342,7 +1357,6 @@ ul.pagination .active a {
 
 .category-block .header i {
   margin-right: 6px;
-  color: #fff;
   font-size: 13px;
   line-height: 35px;
   text-align: center;
@@ -1464,12 +1478,50 @@ ul.pagination .active a {
   margin-bottom: 30px;
 }
 
+.collection-photo {
+  width: 255px;
+}
+
+.edit-collection-card{
+  width: 200px;
+  display: inline-block;
+  border-radius: 25px;
+  background: white;
+  padding: 20px;
+  width: 250px;
+  height: 100px;
+}
+
+.card img {
+  height: 300px;
+  width: 336px;
+}
+
+.profile-image {
+  height: 100px !important;
+  width: 100px !important;
+}
+
+.profile-div {
+  align-content: center;
+}
+
 .product-item .card {
   border: none;
 }
 
 .product-item .card .card-body {
-  padding: 20px;
+  padding: 10px;
+  align-items: center;
+}
+
+.discover-collection-photo {
+  width: 350px;
+}
+
+.list-of-restaurants-image {
+  height: 300px !important;
+  width: 255px !important;
 }
 
 .product-item .card .card-body .card-title {
@@ -1480,8 +1532,6 @@ ul.pagination .active a {
 
 .product-item .thumb-content img {
   position: relative;
-  height: 300px;
-  width: 335px;
 }
 
 .product-item .thumb-content .price {
@@ -1502,11 +1552,40 @@ ul.pagination .active a {
   font-size: 12px;
 }
 
-.closed {
+.closed, .fire {
   color: red;
 }
 
-.open {
+.carrot {
+  color: orange;
+}
+
+.fish {
+  color: blue;
+}
+
+.ice-cream {
+  color: grey;
+}
+
+.leaf {
+  color: darkgreen;
+}
+
+.cocktail {
+  color: black;
+}
+
+.coffee, .bread{
+  color: brown;
+}
+
+.category-button {
+  border: none;
+  background: none;
+}
+
+.open, .price {
   color: green;
 }
 
@@ -1521,6 +1600,10 @@ ul.pagination .active a {
 
 .product-item .product-ratings .selected i {
   color: gold;
+}
+
+.list-inline-item i {
+  color: gold
 }
 
 .product-details .product-title {
@@ -1690,6 +1773,10 @@ ul.pagination .active a {
   margin-bottom: 20px;
   padding-bottom: 10px;
   border-bottom: 1px solid #dedede;
+}
+
+.category-sidebar {
+  margin-top: 10px;
 }
 
 .widget.category-list ul li:not(:last-child) {
@@ -2501,7 +2588,7 @@ article.single-post p {
 
 .product-ratings ul li i {
   font-size: 18px;
-  color: #5672f9;
+  color: gold;
 }
 
 .terms-condition-content p {
